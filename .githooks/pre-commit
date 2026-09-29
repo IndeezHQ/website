@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Fast feedback on the way in: formatting and lint, staged files only.
+#
+# Deliberately not the full suite. Checking everything takes ~12s and running
+# that on every commit trains people to reach for --no-verify, which defeats
+# the point. The complete gate runs on push instead.
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+formattable=$(echo "$staged" | grep -E '\.(ts|tsx|mts|css|md|json|mjs)$' || true)
+lintable=$(echo "$staged" | grep -E '\.(ts|tsx)$' || true)
+
+if [ -n "$formattable" ]; then
+  echo "pre-commit: prettier"
+  echo "$formattable" | xargs npx prettier --check
+fi
+
+if [ -n "$lintable" ]; then
+  echo "pre-commit: eslint"
+  echo "$lintable" | xargs npx eslint
+fi
+
+echo "pre-commit: ok"

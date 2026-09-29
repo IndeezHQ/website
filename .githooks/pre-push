@@ -1,14 +1,37 @@
 #!/bin/sh
 #
-# Runs the full check before anything leaves this machine.
+# The gate. Nothing leaves this machine without the full check passing.
 #
 # Enabled automatically by the `prepare` script on npm install, which points
 # core.hooksPath at this directory.
 #
-# This is a convenience, not the gate. `git push --no-verify` skips it, so the
-# real enforcement is the CI workflow plus a branch protection rule on main.
+# Pushing to main additionally runs the production build, so main gets exactly
+# what CI will run before it gets there rather than after.
+#
+# This is still only a speed bump: `git push --no-verify` skips it. The real
+# enforcement is the branch protection rule on main, which lives in GitHub.
 set -e
+
+remote_ref_target="refs/heads/main"
+pushing_to_main=0
+
+# stdin gives "<local ref> <local sha> <remote ref> <remote sha>" per ref.
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  [ "$remote_ref" = "$remote_ref_target" ] && pushing_to_main=1
+done
 
 echo "pre-push: npm run verify (format, lint, types, copy, tests)"
 npm run verify
+
+if [ "$pushing_to_main" -eq 1 ]; then
+  echo ""
+  echo "pre-push: this push targets main. Running the production build too."
+  npm run build
+  echo ""
+  echo "  main is the released branch. Day to day work belongs on"
+  echo "  development; main should only ever receive changes you have"
+  echo "  looked at in a browser and are happy to put in front of people."
+  echo ""
+fi
+
 echo "pre-push: ok"

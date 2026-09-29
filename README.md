@@ -14,7 +14,8 @@ project; there is no API server between them.
 
 ## Status
 
-**Phase 0 complete** — foundation, landing page and the four legal documents.
+**Phase 0 complete** — foundation, landing page, the four legal documents,
+and coming-soon placeholders for sign in and sign up. Deployed on Vercel.
 Phase 1 (auth and the account portal) is next.
 
 ---
@@ -25,7 +26,10 @@ Phase 1 (auth and the account portal) is next.
 - **React 19** · **TypeScript**
 - **Tailwind CSS v4**
 - **Supabase** — `@supabase/ssr` for cookie-based sessions
+- **Vitest** · **Testing Library** — 164 tests
 - **Prettier** · **ESLint**
+
+Requires **Node 22.13+**. See [Running locally](#running-locally).
 
 > **Note:** Next 16 renamed `middleware.ts` to `proxy.ts`. This repo ships an
 > `AGENTS.md` telling coding agents to read `node_modules/next/dist/docs/`
@@ -76,15 +80,24 @@ The dev server picks the first free port from 3000.
 ## Structure
 
 ```text
+.github/workflows/ci.yml   # verify + build on every PR and push to main
+.githooks/                 # pre-commit and pre-push, installed by `prepare`
 docs/
-└── ROADMAP.md             # phasing to full app parity
+├── ROADMAP.md             # phasing to full app parity
+└── BRAND_ASSETS.md        # how the logo, videos and textures are produced
+media-source/videos/       # uncropped screen recordings. Masters, not served
+scripts/check-copy.mjs     # fails the build on em and en dashes in copy
+tests/
+├── helpers/               # font cmap reader, next/font stub
+└── integrity/             # routes, headings, legal documents
 src/
 ├── app/
-│   ├── (marketing)/       # public pages — landing + the four legal documents
+│   ├── (marketing)/       # landing, legal documents, sign in, sign up
+│   ├── icon.png           # favicon, via Next's file convention
 │   ├── globals.css        # brand tokens (mirrors the app's theme.ts)
-│   └── layout.tsx         # root layout, fonts, metadata
-├── assets/fonts/          # Indeez-Regular.ttf — wordmark only
-├── components/
+│   └── layout.tsx         # root layout, fonts, metadata, starfield backdrop
+├── assets/fonts/          # Indeez-Regular.ttf, the heading face
+├── components/            # each with a colocated *.test.tsx
 ├── content/legal/         # the legal documents, as Markdown
 └── lib/
     ├── fonts.ts
@@ -118,7 +131,37 @@ dead buttons. Fill both in and the buttons appear on their own.
 **Contact addresses appear in the legal text too.** `support@` for help and
 child-safety reports, `info@` for privacy requests and legal notices. Changing
 one in `src/lib/site.ts` without changing the matching document will make the
-two disagree.
+two disagree, and a test will say so.
+
+**No em dashes or en dashes in copy**, and headings can only use the 73
+characters the Indeez face carries. Both are enforced. The full set of
+writing and design rules lives in [`AGENTS.md`](AGENTS.md).
+
+---
+
+## Branching
+
+`main` is the released branch. Vercel deploys it, and the app store listings
+will point at it, so it only receives work that has been checked in a browser.
+
+**All work happens on `development`.** Nothing goes to `main` until it has
+been QA'd.
+
+```bash
+git switch development
+# ...work...
+npm run verify
+git push origin development
+```
+
+To release, once you have clicked around it and are happy:
+
+```bash
+git switch main && git merge development && git push origin main
+```
+
+Pushing to `main` runs the production build on top of `npm run verify`, so it
+gets what CI runs before it gets there rather than after.
 
 ---
 
@@ -169,7 +212,9 @@ pull request and every push to `main`.
 
 ## Related documentation
 
+- [`AGENTS.md`](AGENTS.md) — branching, the quality gate, and the house rules for copy
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phasing to full app parity
+- [`docs/BRAND_ASSETS.md`](docs/BRAND_ASSETS.md) — logo, videos, textures and how they are produced
 - [`../backend/README.md`](../backend/README.md) — schema, RLS, RPCs
 - [`../backend/FRONTEND_HANDOFF.md`](../backend/FRONTEND_HANDOFF.md) — auth integration guide
 - [`../mobile-app/docs/BACKEND_IDENTITY_MODEL.md`](../mobile-app/docs/BACKEND_IDENTITY_MODEL.md) — the profiles/Pages identity model
