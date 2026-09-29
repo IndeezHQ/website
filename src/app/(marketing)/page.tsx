@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { GetTheApp } from "@/components/get-the-app";
+import { PhoneDemo } from "@/components/phone-demo";
 import { SceneGraph } from "@/components/scene-graph";
 import { audiences, site } from "@/lib/site";
 
@@ -30,6 +31,39 @@ const pillars = [
   {
     title: "What is on, near you.",
     body: "Events from the artists and venues you follow, on a calendar that knows where you are. The gig on Tuesday in a 200-capacity room is the point, not an afterthought.",
+  },
+];
+
+/**
+ * Screen recordings from the real app. `swipe` carries the hero, so the
+ * showcase covers the three surfaces the copy cannot describe as well as a
+ * moving picture can: the look of the feed, how much a profile can be made
+ * your own, and the player skins.
+ */
+const demos = [
+  {
+    src: "/videos/feed.mp4",
+    poster: "/videos/feed.webp",
+    title: "The feed",
+    body: "Posts from the artists, labels, venues and stores you follow — closer to a zine page than a grid of squares.",
+    label:
+      "Scrolling the Indeez feed, showing photo posts laid out like taped-down prints.",
+  },
+  {
+    src: "/videos/profile.mp4",
+    poster: "/videos/profile.webp",
+    title: "Profiles worth having",
+    body: "Your own banner and type, your playlists, the people you follow, and the gigs you are going to — all on one page.",
+    label:
+      "An Indeez profile with a custom banner, playlists, followers and upcoming events, then opening a playlist.",
+  },
+  {
+    src: "/videos/skins.mp4",
+    poster: "/videos/skins.webp",
+    title: "Play it on something",
+    body: "Listen to a record as a cassette, a vinyl, or clean. A small thing that makes the library feel like yours.",
+    label:
+      "Switching the Indeez player between default, vinyl and cassette skins.",
   },
 ];
 
@@ -69,25 +103,35 @@ export default function HomePage() {
         </div>
 
         <div className="mx-auto w-full max-w-6xl px-5 pt-20 pb-24 sm:px-8 sm:pt-28 sm:pb-32">
-          <div className="max-w-3xl">
-            <p className="border-line text-muted inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs tracking-wide">
-              <span className="bg-volt h-1.5 w-1.5 rounded-full" />
-              Independent music
-            </p>
+          <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-20">
+            <div>
+              <p className="border-line text-muted inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs tracking-wide">
+                <span className="bg-volt h-1.5 w-1.5 rounded-full" />
+                Independent music
+              </p>
 
-            <h1 className="font-display mt-6 text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-              Independent music runs on{" "}
-              <span className="text-accent">relationships</span>.
-            </h1>
+              <h1 className="font-display mt-6 text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
+                Independent music runs on{" "}
+                <span className="text-accent">relationships</span>.
+              </h1>
 
-            <p className="text-muted mt-6 max-w-2xl text-lg leading-relaxed text-pretty sm:text-xl">
-              Swipe through whole songs. Follow the artists, labels, venues and
-              record stores that make up your scene. See what is on near you
-              this week. Indeez is one app for all of it.
-            </p>
+              <p className="text-muted mt-6 max-w-2xl text-lg leading-relaxed text-pretty sm:text-xl">
+                Swipe through whole songs. Follow the artists, labels, venues
+                and record stores that make up your scene. See what is on near
+                you this week. Indeez is one app for all of it.
+              </p>
 
-            <div className="mt-10">
-              <GetTheApp />
+              <div className="mt-10">
+                <GetTheApp />
+              </div>
+            </div>
+
+            <div className="mx-auto w-full max-w-[15rem] lg:max-w-none">
+              <PhoneDemo
+                src="/videos/swipe.mp4"
+                poster="/videos/swipe.webp"
+                label="Swipe discovery in the Indeez app: a track playing in full with artwork, artist and label."
+              />
             </div>
           </div>
         </div>
@@ -135,6 +179,38 @@ export default function HomePage() {
                   {pillar.body}
                 </p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------- App showcase */}
+      <section id="look" className="border-line-soft scroll-mt-20 border-t">
+        <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
+          <h2 className="font-display max-w-2xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+            What it actually looks like
+          </h2>
+          <p className="text-muted mt-4 max-w-2xl leading-relaxed">
+            Recorded in the app, not mocked up.
+          </p>
+
+          <div className="mt-14 grid gap-10 sm:grid-cols-3 sm:gap-6 lg:gap-10">
+            {demos.map((demo) => (
+              <figure key={demo.src} className="mx-auto w-full max-w-[16rem]">
+                <PhoneDemo
+                  src={demo.src}
+                  poster={demo.poster}
+                  label={demo.label}
+                />
+                <figcaption className="mt-6">
+                  <h3 className="font-display text-lg font-semibold">
+                    {demo.title}
+                  </h3>
+                  <p className="text-muted mt-2 text-sm leading-relaxed">
+                    {demo.body}
+                  </p>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </div>

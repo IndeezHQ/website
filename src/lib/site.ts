@@ -37,6 +37,7 @@ export const appStoreLinksLive = Boolean(stores.ios || stores.android);
 
 export const marketingNav = [
   { href: "/#what", label: "What it is" },
+  { href: "/#look", label: "See it" },
   { href: "/#scene", label: "The scene" },
   { href: "/#who", label: "Who it's for" },
   { href: "/#principles", label: "Principles" },
