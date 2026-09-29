@@ -3,11 +3,10 @@ import { SceneIcon, type SceneIconName } from "@/components/scene-icons";
 /**
  * The relationship graph, drawn as a wall of polaroids.
  *
- * This is the hardest thing to explain in words to someone who has not seen
- * the app: that Indeez stores the real links between the participants in a
- * scene, not just a list of accounts. The nodes and edge labels mirror actual
- * relations in the schema (artist_labels, event_artists, follows), so the
- * picture is a claim the product can back up.
+ * This shows what a scene looks like on Indeez: the artist at the centre, and
+ * the label, venue, record store and fans around them, joined by the
+ * relationships that actually exist between those people. It is the picture
+ * of the platform, including the parts still being built.
  *
  * A tidy orthogonal flowchart reads like a slide in a deck. The app's own feed
  * is a scrapbook of taped-down prints, so this is pinned photographs with the
@@ -45,37 +44,24 @@ const NODES: Node[] = [
 const ARTIST = { x: 250, y: 225, rotate: -1 };
 
 /**
- * The outer loop. Every one of these is `follows`, which is profile to
- * profile in the schema and so works between any two types: a label can
- * follow a venue, a store can follow a label. It is drawn fainter and left
- * unlabelled because repeating the same verb four times says less than
- * showing the shape, and it closes the square that four hub edges leave open.
+ * Every line is bowed rather than straight, so the joins read as drawn
+ * instead of plotted. The four that meet the artist are the hub; the three
+ * around the edge are the relationships that skip the middle.
  *
- * Deliberately NOT drawn here: buying, selling or supplying. There is no
- * commerce in the backend at all, so an edge saying "buys from" would be
- * describing a feature that does not exist.
+ * There is no line between label and venue: a label reaches a room through
+ * its artists, so that corner stays open on purpose.
  */
-const RING = [
-  "M140 86 Q250 68 360 86",
-  "M418 150 Q436 225 418 300",
-  "M140 364 Q250 382 360 364",
-  "M82 150 Q64 225 82 300",
-];
-
-/** Bowed rather than straight, so the joins read as drawn instead of plotted. */
 const EDGES = [
+  // Hub: everything that runs through the artist.
   { d: "M250 225 Q160 150 82 86", label: "signed to", x: 163, y: 153 },
   { d: "M250 225 Q340 150 418 86", label: "plays", x: 337, y: 153 },
   { d: "M250 225 Q160 300 82 364", label: "stocked by", x: 163, y: 297 },
   { d: "M250 225 Q340 300 418 364", label: "followed by", x: 337, y: 297 },
+  // Perimeter: relationships that do not need the artist in the middle.
+  { d: "M82 150 Q64 225 82 300", label: "supplies", x: 73, y: 225 },
+  { d: "M140 364 Q250 382 360 364", label: "buys from", x: 250, y: 373 },
+  { d: "M418 150 Q436 225 418 300", label: "attending", x: 427, y: 225 },
 ];
-
-/**
- * The one ring segment that earns a label. Fans attending a gig is a real,
- * typed relation (`event_attendance`), and it is the edge between a venue and
- * its audience that does not route through the artist.
- */
-const RING_LABEL = { label: "attending", x: 421, y: 225 };
 
 const SIZE = 132;
 const ARTIST_SIZE = 148;
@@ -145,24 +131,11 @@ export function SceneGraph() {
       <desc id="scene-graph-desc">
         An artist sits at the centre, linked to the label they are signed to,
         the venue they play, the record store that stocks them, and the fans who
-        follow them.
+        follow them. Around the edge, the label supplies the record store, fans
+        buy from it, and fans attend the venue.
       </desc>
 
-      {/* The follow loop, behind everything and deliberately quiet. */}
-      <g
-        stroke="var(--color-faint)"
-        strokeOpacity={0.5}
-        strokeWidth={1.5}
-        strokeDasharray="3 7"
-        strokeLinecap="round"
-        fill="none"
-      >
-        {RING.map((d) => (
-          <path key={d} d={d} />
-        ))}
-      </g>
-
-      {/* Hub edges next, so the photographs cover where they meet. */}
+      {/* Lines first, so the photographs cover where they meet. */}
       <g
         stroke="var(--color-faint)"
         strokeWidth={2}
@@ -202,29 +175,6 @@ export function SceneGraph() {
           </text>
         </g>
       ))}
-
-      <g transform={`translate(${RING_LABEL.x} ${RING_LABEL.y}) rotate(2)`}>
-        <rect
-          x={-38}
-          y={-11}
-          width={76}
-          height={22}
-          rx={11}
-          fill="var(--color-bg)"
-          stroke="var(--color-line-soft)"
-          strokeWidth={1}
-        />
-        <text
-          x={0}
-          y={1}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fontSize={12}
-          fill="var(--color-muted)"
-        >
-          {RING_LABEL.label}
-        </text>
-      </g>
 
       {NODES.map((node) => (
         <Polaroid

@@ -242,15 +242,13 @@ export default function HomePage() {
                 <p>
                   Every profile is a real participant in a music scene, and the
                   links between them are the real ones. An artist is signed to a
-                  label. A venue books a lineup. A store puts on an in-store. A
-                  fan turns up and follows all of it.
+                  label. A venue books a lineup. A store stocks a record. A fan
+                  buys it, turns up, and follows all of it.
                 </p>
                 <p>
                   Those relationships already exist offline. Indeez is where
                   they get written down, which is what turns a directory of
-                  accounts into somewhere you can actually find things. Around
-                  the outside runs the loop everyone shares: any profile can
-                  follow any other.
+                  accounts into somewhere you can actually find things.
                 </p>
                 <p className="text-fg">
                   Follow an artist and you find their label. Open a venue and
