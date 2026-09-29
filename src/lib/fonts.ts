@@ -1,12 +1,18 @@
 import localFont from "next/font/local";
 
 /**
- * The Indeez wordmark face, taken from the mobile app's bundled fonts
- * (Indeez/mobile-app/assets/fonts/Indeez-Regular.ttf).
+ * The official Indeez face, taken from the mobile app's bundled fonts
+ * (Indeez/mobile-app/assets/fonts/Indeez-Regular.ttf). It is wired to
+ * `--font-display` in globals.css, so it sets every heading on the site.
  *
- * It is a ~16KB display face with a limited glyph set, so it is only ever used
- * for the wordmark itself — never for body copy, which would silently fall
- * back mid-sentence on any character the face does not carry.
+ * Headings only, never body copy. The face carries 73 glyphs: A-Z, a-z, 0-9
+ * and `! " & ' , - . : ?`. Everything else falls back silently mid-word, so
+ * anything using it must stay inside that set. Notably absent are parentheses,
+ * the slash, and the semicolon.
+ *
+ * It also ships a single weight, so `font-bold` on a heading is synthesised by
+ * the browser rather than drawn. Headings therefore set `font-normal` and rely
+ * on the face's own heft.
  */
 export const indeezWordmark = localFont({
   src: "../assets/fonts/Indeez-Regular.ttf",

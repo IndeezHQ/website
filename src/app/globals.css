@@ -17,15 +17,15 @@
   --color-muted: #b8b8c7;
   --color-faint: #7b7b8f;
 
-  --color-accent: #e84b8a;
-  --color-accent-soft: rgba(232, 75, 138, 0.18);
-  --color-volt: #f4ff00;
+  --color-accent: #eb008b;
+  --color-accent-soft: rgba(235, 0, 139, 0.18);
+  --color-volt: #f7ff01;
 
   --color-line: rgba(255, 255, 255, 0.12);
   --color-line-soft: rgba(255, 255, 255, 0.06);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), var(--font-inter), sans-serif;
+  --font-display: var(--font-indeez), var(--font-space-grotesk), sans-serif;
 
   --radius-card: 16px;
 }
@@ -83,8 +83,9 @@ body {
 .legal-prose h2 {
   color: var(--color-fg);
   font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  /* The Indeez face ships one weight; 600 would be synthesised and smear. */
+  font-weight: 400;
   letter-spacing: -0.01em;
   margin-top: 3rem;
   scroll-margin-top: 6rem;

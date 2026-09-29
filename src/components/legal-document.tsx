@@ -57,7 +57,7 @@ export function LegalDocument({
 
         <article className="min-w-0">
           <header className="border-line-soft border-b pb-8">
-            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl">
+            <h1 className="font-display text-4xl tracking-tight text-balance sm:text-5xl">
               {title}
             </h1>
             {effective && (

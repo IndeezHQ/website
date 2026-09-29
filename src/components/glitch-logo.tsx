@@ -32,12 +32,24 @@ export function GlitchLogo() {
         media="(max-width: 640px)"
         type="image/webp"
       />
+      {/*
+        The artwork carries 14.21% transparent padding down its left edge, so
+        left-aligning the file leaves the wordmark floating inward of
+        everything below it. The negative margin pulls that dead space out so
+        the bolt sits on the same line as the heading. It is a percentage so it
+        scales with the image, and it resolves against the wrapper, which is
+        the same width as the image.
+
+        Glitch frames reach further left than the held frame does and will spill
+        past the container. The hero section clips them, which on a glitch
+        reads as intended rather than broken.
+      */}
       <img
         src="/brand/glitch-logo.webp"
         alt="Indeez"
         width={800}
         height={518}
-        className="h-auto w-full max-w-none"
+        className="-ml-[14.21%] h-auto w-full max-w-none"
         decoding="async"
         fetchPriority="high"
       />

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
+import { indeezWordmark } from "@/lib/fonts";
 import { site } from "@/lib/site";
 
 import "./globals.css";
@@ -45,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${indeezWordmark.variable} h-full antialiased`}
     >
       <body className="bg-bg text-fg flex min-h-full flex-col font-sans">
         {/*

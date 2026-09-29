@@ -181,9 +181,37 @@ surprised to find themselves on the homepage.
 
 ## Other brand files
 
-| File                                  | Origin                            | Used for                                                                                                         |
-| ------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `src/assets/fonts/Indeez-Regular.ttf` | `../../mobile-app/assets/fonts/`  | The text wordmark in the footer. A ~16KB display face with a limited glyph set — wordmark only, never body copy. |
-| `public/brand/favicon.png`            | `../../mobile-app/assets/images/` | Copied from the app.                                                                                             |
-| `public/brand/adaptive-icon.png`      | `../../mobile-app/assets/images/` | Copied from the app.                                                                                             |
-| `public/brand/starry.webp`            | Added by hand                     | The app's dark starfield texture, 1152×1534. The page backdrop, set in `src/app/layout.tsx`.                     |
+| File                                  | Origin                            | Used for                                                                                                                                |
+| ------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/assets/fonts/Indeez-Regular.ttf` | `../../mobile-app/assets/fonts/`  | The official face. Wired to `--font-display`, so it sets every heading on the site, plus the footer wordmark. See the constraint below. |
+| `public/brand/favicon.png`            | `../../mobile-app/assets/images/` | Copied from the app.                                                                                                                    |
+| `public/brand/adaptive-icon.png`      | `../../mobile-app/assets/images/` | Copied from the app.                                                                                                                    |
+| `public/brand/starry.webp`            | Added by hand                     | The app's dark starfield texture, 1152×1534. The page backdrop, set in `src/app/layout.tsx`.                                            |
+
+---
+
+## The heading face has 73 glyphs
+
+`Indeez-Regular.ttf` is the official face and drives `--font-display`, which
+every heading on the site uses. It is a display face, not a text face, and it
+carries only:
+
+```
+A-Z  a-z  0-9  space  ! " & ' , - . : ?
+```
+
+Anything else falls back to Space Grotesk silently, mid-word, which looks like
+a bug rather than a choice. **Notably absent: parentheses, the slash, the
+semicolon, and every currency or maths symbol.**
+
+So a heading may not contain `( ) / ; # $ % * + < = > @ [ ] ^ _ { | } ~`. Body
+copy is unaffected, since it uses Inter.
+
+Every heading currently on the site was checked against this set and is
+covered. If you add one with, say, a bracketed aside, either reword it or move
+the aside into the paragraph below.
+
+The face also ships a **single weight**. `font-bold` on a heading makes the
+browser synthesise one, which smears the heavy letterforms, so headings using
+`font-display` deliberately carry no weight class and rely on the face's own
+heft.

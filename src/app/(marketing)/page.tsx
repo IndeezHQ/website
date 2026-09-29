@@ -103,32 +103,32 @@ export default function HomePage() {
           <div className="bg-volt/5 absolute top-24 -right-32 h-[24rem] w-[24rem] rounded-full blur-[120px]" />
         </div>
 
-        <div className="mx-auto w-full max-w-6xl px-5 pt-20 pb-24 sm:px-8 sm:pt-28 sm:pb-32">
-          <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-20">
+        <div className="mx-auto w-full max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pt-12 sm:pb-20">
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-16">
             <div>
               {/* The wordmark stands in for the eyebrow pill that used to sit
                   here: it already says "indeez", far louder. */}
-              <div className="max-w-[30rem]">
+              <div className="max-w-[21rem]">
                 <GlitchLogo />
               </div>
 
-              <h1 className="font-display mt-10 text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
+              <h1 className="font-display mt-6 text-5xl leading-[1.05] tracking-tight text-balance sm:text-6xl">
                 Independent music runs on{" "}
                 <span className="text-accent">relationships</span>.
               </h1>
 
-              <p className="text-muted mt-6 max-w-2xl text-lg leading-relaxed text-pretty sm:text-xl">
+              <p className="text-muted mt-5 max-w-2xl text-lg leading-relaxed text-pretty">
                 Swipe through whole songs. Follow the artists, labels, venues
                 and record stores that make up your scene. See what is on near
                 you this week. Indeez is one app for all of it.
               </p>
 
-              <div className="mt-10">
+              <div className="mt-8">
                 <GetTheApp />
               </div>
             </div>
 
-            <div className="mx-auto w-full max-w-[15rem] lg:max-w-none">
+            <div className="mx-auto w-full max-w-[13rem] lg:max-w-none">
               <PhoneDemo
                 src="/videos/swipe.mp4"
                 poster="/videos/swipe.webp"
@@ -143,7 +143,7 @@ export default function HomePage() {
       <section id="what" className="border-line-soft scroll-mt-20 border-t">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
           <div className="max-w-3xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+            <h2 className="font-display text-3xl tracking-tight text-balance sm:text-4xl">
               Nobody built for the middle
             </h2>
             <div className="text-muted mt-6 space-y-5 leading-relaxed">
@@ -171,10 +171,10 @@ export default function HomePage() {
                 key={pillar.title}
                 className="border-line-soft bg-surface/40 hover:border-line rounded-2xl border p-7 transition-colors"
               >
-                <span className="text-accent font-display text-sm font-semibold">
+                <span className="text-accent font-display text-sm">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="font-display mt-4 text-xl font-semibold text-balance">
+                <h3 className="font-display mt-4 text-xl text-balance">
                   {pillar.title}
                 </h3>
                 <p className="text-muted mt-3 text-sm leading-relaxed">
@@ -189,7 +189,7 @@ export default function HomePage() {
       {/* ------------------------------------------------------- App showcase */}
       <section id="look" className="border-line-soft scroll-mt-20 border-t">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
-          <h2 className="font-display max-w-2xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+          <h2 className="font-display max-w-2xl text-3xl tracking-tight text-balance sm:text-4xl">
             What it actually looks like
           </h2>
           <p className="text-muted mt-4 max-w-2xl leading-relaxed">
@@ -205,9 +205,7 @@ export default function HomePage() {
                   label={demo.label}
                 />
                 <figcaption className="mt-6">
-                  <h3 className="font-display text-lg font-semibold">
-                    {demo.title}
-                  </h3>
+                  <h3 className="font-display text-lg">{demo.title}</h3>
                   <p className="text-muted mt-2 text-sm leading-relaxed">
                     {demo.body}
                   </p>
@@ -223,7 +221,7 @@ export default function HomePage() {
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
           <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
             <div>
-              <h2 className="font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+              <h2 className="font-display text-3xl tracking-tight text-balance sm:text-4xl">
                 A scene is a network. So is Indeez.
               </h2>
               <div className="text-muted mt-6 space-y-5 leading-relaxed">
@@ -255,7 +253,7 @@ export default function HomePage() {
       {/* ----------------------------------------------------------- Audiences */}
       <section id="who" className="border-line-soft scroll-mt-20 border-t">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
-          <h2 className="font-display max-w-2xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+          <h2 className="font-display max-w-2xl text-3xl tracking-tight text-balance sm:text-4xl">
             Five ways to be on Indeez
           </h2>
           <p className="text-muted mt-4 max-w-2xl leading-relaxed">
@@ -269,9 +267,7 @@ export default function HomePage() {
                 key={audience.key}
                 className="border-line-soft bg-surface/40 hover:border-line rounded-2xl border p-6 transition-colors"
               >
-                <h3 className="font-display text-lg font-semibold">
-                  {audience.title}
-                </h3>
+                <h3 className="font-display text-lg">{audience.title}</h3>
                 <p className="text-muted mt-2.5 text-sm leading-relaxed">
                   {audience.body}
                 </p>
@@ -287,7 +283,7 @@ export default function HomePage() {
         className="border-line-soft scroll-mt-20 border-t"
       >
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
-          <h2 className="font-display max-w-2xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+          <h2 className="font-display max-w-2xl text-3xl tracking-tight text-balance sm:text-4xl">
             Three things we put in writing
           </h2>
           <p className="text-muted mt-4 max-w-2xl leading-relaxed">
@@ -307,7 +303,7 @@ export default function HomePage() {
                 key={principle.title}
                 className="border-line-soft bg-surface/40 flex flex-col rounded-2xl border p-7"
               >
-                <h3 className="font-display text-xl font-semibold text-balance">
+                <h3 className="font-display text-xl text-balance">
                   {principle.title}
                 </h3>
                 <p className="text-muted mt-3 flex-1 text-sm leading-relaxed">
@@ -326,7 +322,7 @@ export default function HomePage() {
       <section className="border-line-soft border-t">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
           <div className="max-w-3xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+            <h2 className="font-display text-3xl tracking-tight text-balance sm:text-4xl">
               Why it compounds
             </h2>
             <div className="text-muted mt-6 space-y-5 leading-relaxed">
@@ -358,7 +354,7 @@ export default function HomePage() {
       <section className="border-line-soft border-t">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
           <div className="border-line-soft from-accent/10 relative overflow-hidden rounded-3xl border bg-gradient-to-br to-transparent px-7 py-14 sm:px-14">
-            <h2 className="font-display max-w-xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+            <h2 className="font-display max-w-xl text-3xl tracking-tight text-balance sm:text-4xl">
               Bring your scene with you
             </h2>
             <p className="text-muted mt-4 max-w-xl leading-relaxed">
