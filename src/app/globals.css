@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens are lifted from the mobile app's theme
+ * (Indeez/mobile-app/src/design/theme.ts) so the site and the app read as one
+ * product. If a colour changes there, change it here too.
+ *
+ * The site is deliberately dark-only: it mirrors the app, and a light variant
+ * of this palette would be a different brand rather than the same one.
+ */
+@theme {
+  --color-bg: #07070a;
+  --color-surface: #111118;
+  --color-surface-2: #1a1a24;
+
+  --color-fg: #ffffff;
+  --color-muted: #b8b8c7;
+  --color-faint: #7b7b8f;
+
+  --color-accent: #e84b8a;
+  --color-accent-soft: rgba(232, 75, 138, 0.18);
+  --color-volt: #f4ff00;
+
+  --color-line: rgba(255, 255, 255, 0.12);
+  --color-line-soft: rgba(255, 255, 255, 0.06);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), sans-serif;
+
+  --radius-card: 16px;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  /* The marketing page anchors to section ids; keep the sticky header clear. */
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+/*
+ * A single visible focus treatment everywhere. The default ring is nearly
+ * invisible against #07070A, which makes keyboard navigation guesswork.
+ */
+:focus-visible {
+  outline: 2px solid var(--color-volt);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+/*
+ * Long-form legal copy. The legal pages render trusted, repo-owned Markdown
+ * through this class rather than pulling in a typography plugin for four
+ * static documents.
+ */
+.legal-prose {
+  color: var(--color-muted);
+  line-height: 1.75;
+}
+
+.legal-prose > * + * {
+  margin-top: 1.25rem;
+}
+
+.legal-prose h2 {
+  color: var(--color-fg);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 3rem;
+  scroll-margin-top: 6rem;
+}
+
+.legal-prose h3 {
+  color: var(--color-fg);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 2rem;
+}
+
+.legal-prose ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+.legal-prose li + li {
+  margin-top: 0.5rem;
+}
+
+.legal-prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal-prose strong {
+  color: var(--color-fg);
+  font-weight: 600;
+}
