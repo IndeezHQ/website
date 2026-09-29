@@ -58,7 +58,7 @@ export const legalNav = [
 export const audiences = [
   {
     key: "fan",
-    title: "Listeners",
+    title: "Fans",
     body: "Whole songs, not hooks. Follow the artists you actually play, find out where they are playing next, and keep your library, playlists and the people you listen to in one place.",
   },
   {

@@ -4,6 +4,7 @@ import { GetTheApp } from "@/components/get-the-app";
 import { GlitchLogo } from "@/components/glitch-logo";
 import { PhoneDemo } from "@/components/phone-demo";
 import { SceneGraph } from "@/components/scene-graph";
+import { SceneIcon } from "@/components/scene-icons";
 import { audiences, site } from "@/lib/site";
 
 /**
@@ -267,6 +268,9 @@ export default function HomePage() {
                 key={audience.key}
                 className="border-line-soft bg-surface/40 hover:border-line rounded-2xl border p-6 transition-colors"
               >
+                <span className="border-line-soft bg-surface-2 text-volt mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border">
+                  <SceneIcon name={audience.key} className="h-5 w-5" />
+                </span>
                 <h3 className="font-display text-lg">{audience.title}</h3>
                 <p className="text-muted mt-2.5 text-sm leading-relaxed">
                   {audience.body}
