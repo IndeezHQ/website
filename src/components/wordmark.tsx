@@ -28,7 +28,7 @@ export function Wordmark({
     <Link
       href={href}
       className="hover:text-accent inline-flex items-center transition-colors"
-      aria-label="Indeez — home"
+      aria-label="Indeez home"
     >
       {mark}
     </Link>

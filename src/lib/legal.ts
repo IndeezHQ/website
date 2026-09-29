@@ -27,7 +27,7 @@ export const legalDocuments = {
     title: "Terms & Conditions",
     effective: "August 18, 2026",
     summary:
-      "The agreement governing your use of Indeez — accounts, your content and the licence you grant, uploads, moderation, payments and disputes.",
+      "The agreement governing your use of Indeez: accounts, your content and the licence you grant, uploads, moderation, payments and disputes.",
   },
   "child-safety": {
     slug: "child-safety",

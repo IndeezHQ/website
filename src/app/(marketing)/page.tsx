@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { GetTheApp } from "@/components/get-the-app";
+import { GlitchLogo } from "@/components/glitch-logo";
 import { PhoneDemo } from "@/components/phone-demo";
 import { SceneGraph } from "@/components/scene-graph";
 import { audiences, site } from "@/lib/site";
@@ -18,11 +19,11 @@ import { audiences, site } from "@/lib/site";
 const pillars = [
   {
     title: "Swipe. Hear the whole song.",
-    body: "Discovery that plays tracks in full — a song gets to make its case the way it was written, not in a thirty-second window. And nobody can buy their way in: paid placement is not permitted in Swipe.",
+    body: "Discovery that plays tracks in full. A song gets to make its case the way it was written, not in a thirty-second window. And nobody can buy their way in: paid placement is not permitted in Swipe.",
   },
   {
     title: "One login, every hat you wear.",
-    body: "You sign in as yourself. From there you act as your artist page, your label, your venue or your store — each co-managed by the people who actually run it, with roles for who can post, edit and publish.",
+    body: "You sign in as yourself. From there you act as your artist page, your label, your venue or your store, each co-managed by the people who actually run it, with roles for who can post, edit and publish.",
   },
   {
     title: "The scene, written down.",
@@ -45,7 +46,7 @@ const demos = [
     src: "/videos/feed.mp4",
     poster: "/videos/feed.webp",
     title: "The feed",
-    body: "Posts from the artists, labels, venues and stores you follow — closer to a zine page than a grid of squares.",
+    body: "Posts from the artists, labels, venues and stores you follow. Closer to a zine page than a grid of squares.",
     label:
       "Scrolling the Indeez feed, showing photo posts laid out like taped-down prints.",
   },
@@ -53,7 +54,7 @@ const demos = [
     src: "/videos/profile.mp4",
     poster: "/videos/profile.webp",
     title: "Profiles worth having",
-    body: "Your own banner and type, your playlists, the people you follow, and the gigs you are going to — all on one page.",
+    body: "Your own banner and type, your playlists, the people you follow, and the gigs you are going to, all on one page.",
     label:
       "An Indeez profile with a custom banner, playlists, followers and upcoming events, then opening a playlist.",
   },
@@ -105,12 +106,13 @@ export default function HomePage() {
         <div className="mx-auto w-full max-w-6xl px-5 pt-20 pb-24 sm:px-8 sm:pt-28 sm:pb-32">
           <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-20">
             <div>
-              <p className="border-line text-muted inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs tracking-wide">
-                <span className="bg-volt h-1.5 w-1.5 rounded-full" />
-                Independent music
-              </p>
+              {/* The wordmark stands in for the eyebrow pill that used to sit
+                  here: it already says "indeez", far louder. */}
+              <div className="max-w-[30rem]">
+                <GlitchLogo />
+              </div>
 
-              <h1 className="font-display mt-6 text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
+              <h1 className="font-display mt-10 text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
                 Independent music runs on{" "}
                 <span className="text-accent">relationships</span>.
               </h1>
@@ -154,7 +156,7 @@ export default function HomePage() {
               <p>
                 Independent music is where most of the culture starts, and it
                 has spent a decade renting space on platforms designed for
-                something else — the music on one, the audience on another, the
+                something else: the music on one, the audience on another, the
                 gig on a third, the record on a fourth.
               </p>
               <p className="text-fg">
@@ -233,7 +235,7 @@ export default function HomePage() {
                 </p>
                 <p>
                   Those relationships already exist offline. Indeez is where
-                  they get written down — which is what turns a directory of
+                  they get written down, which is what turns a directory of
                   accounts into somewhere you can actually find things.
                 </p>
                 <p className="text-fg">
@@ -289,7 +291,7 @@ export default function HomePage() {
             Three things we put in writing
           </h2>
           <p className="text-muted mt-4 max-w-2xl leading-relaxed">
-            Not slogans — clauses. Each one is a commitment in our{" "}
+            Not slogans. Clauses. Each one is a commitment in our{" "}
             <Link
               href="/terms"
               className="text-accent underline underline-offset-4"
@@ -331,7 +333,7 @@ export default function HomePage() {
               <p>
                 Most music platforms grow one account at a time. An artist
                 joining Indeez arrives already attached to a label, a venue, a
-                store and an audience — and every one of those links is a reason
+                store and an audience, and every one of those links is a reason
                 for the next account to join.
               </p>
               <p>

@@ -61,6 +61,61 @@ for the header and keep this one for splash and social use.
 
 ---
 
+## The hero wordmark (glitch)
+
+The large animated wordmark on the landing page.
+
+| File                                   | What it is                                              | Size   |
+| -------------------------------------- | ------------------------------------------------------- | ------ |
+| `public/brand/gifs/glitchLogo.gif`     | Source art. 1506×975, 27 frames, ~45s loop. Not served. | 2.9 MB |
+| `public/brand/glitch-logo.webp`        | Animated, 800×518. Served above 640px.                  | 695 KB |
+| `public/brand/glitch-logo-sm.webp`     | Animated, 480×311. Served at 640px and below.           | 436 KB |
+| `public/brand/glitch-logo-static.webp` | First frame, for reduced motion.                        | 26 KB  |
+
+### The timing is the effect
+
+The animation is not a steady loop. It holds the still logo for 2 to 10
+seconds, glitches for two frames at 100ms, then holds again, over roughly 45
+seconds. Re-encoding at a constant frame rate destroys that, so the encode
+passes the per-frame durations straight through:
+
+```bash
+ffmpeg -y -i public/brand/gifs/glitchLogo.gif \
+  -vf "scale=800:-1:flags=lanczos" \
+  -c:v libwebp_anim -lossless 0 -q:v 62 -compression_level 4 -loop 0 \
+  -fps_mode passthrough \
+  public/brand/glitch-logo.webp
+```
+
+Repeat with `scale=480:-1` for the small variant, and with `-frames:v 1
+-c:v libwebp -q:v 85` for the static one. Check the result with
+`-fps_mode passthrough` still in place: the frame durations should read
+2000, 100, 100, 5000, 100, 100 and so on.
+
+### Why WebP and not video
+
+The art needs real transparency over the starfield backdrop. An h264 MP4 was
+tried and came out about the same size (504KB at 900px) while also needing
+`mix-blend-mode: screen` to fake the transparency, which only works while the
+background stays near-black. WebP keeps a real alpha channel and stays an
+`<img>`.
+
+### Why it is still large
+
+Quality barely moves the needle: at 900px, q30 is 628KB against q60's 752KB.
+The bytes are in the alpha channel and the 18 noisy glitch frames, not colour
+fidelity. Dimensions are the only real lever, which is why there are two sizes.
+`ffmpeg` cannot decode animated WebP back, so verify output by eye in a
+browser rather than by re-extracting frames.
+
+### On the landing page only
+
+`SiteHeader` hides its own small logo when the pathname is `/`, so the
+wordmark does not appear twice on one screen. Every other page shows the
+header logo as normal.
+
+---
+
 ## App screen recordings
 
 Four recordings from the mobile app, used on the landing page — `swipe` in the
@@ -126,9 +181,9 @@ surprised to find themselves on the homepage.
 
 ## Other brand files
 
-| File                                  | Origin                            | Used for                                                                                                                                                       |
-| ------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/assets/fonts/Indeez-Regular.ttf` | `../../mobile-app/assets/fonts/`  | The text wordmark in the footer. A ~16KB display face with a limited glyph set — wordmark only, never body copy.                                               |
-| `public/brand/favicon.png`            | `../../mobile-app/assets/images/` | Copied from the app.                                                                                                                                           |
-| `public/brand/adaptive-icon.png`      | `../../mobile-app/assets/images/` | Copied from the app.                                                                                                                                           |
-| `public/brand/starry.webp`            | Added by hand                     | The app's dark starfield texture, 1152×1534. **Not used yet** — a candidate page background. Delete it if that idea is dropped, rather than leaving it to rot. |
+| File                                  | Origin                            | Used for                                                                                                         |
+| ------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `src/assets/fonts/Indeez-Regular.ttf` | `../../mobile-app/assets/fonts/`  | The text wordmark in the footer. A ~16KB display face with a limited glyph set — wordmark only, never body copy. |
+| `public/brand/favicon.png`            | `../../mobile-app/assets/images/` | Copied from the app.                                                                                             |
+| `public/brand/adaptive-icon.png`      | `../../mobile-app/assets/images/` | Copied from the app.                                                                                             |
+| `public/brand/starry.webp`            | Added by hand                     | The app's dark starfield texture, 1152×1534. The page backdrop, set in `src/app/layout.tsx`.                     |

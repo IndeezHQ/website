@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { Logo } from "@/components/logo";
@@ -8,11 +9,20 @@ import { marketingNav } from "@/lib/site";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  /*
+   * The landing page carries the big animated wordmark in its hero, so the
+   * header mark would be the same logo twice within one screen. It is hidden
+   * there and shown on every other page, where nothing else identifies the
+   * site.
+   */
+  const isLandingPage = pathname === "/";
 
   return (
     <header className="border-line-soft bg-bg/80 sticky top-0 z-50 border-b backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
-        <Logo priority />
+        {isLandingPage ? <span /> : <Logo />}
 
         <nav
           aria-label="Main"

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run format:check && npm run lint && npm run typecheck"
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run check:copy",
+    "check:copy": "node scripts/check-copy.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
