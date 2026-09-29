@@ -244,7 +244,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="border-line-soft bg-surface/30 rounded-3xl border p-6 sm:p-10">
+            <div className="mx-auto w-full max-w-lg lg:max-w-none">
               <SceneGraph />
             </div>
           </div>

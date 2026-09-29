@@ -181,12 +181,14 @@ surprised to find themselves on the homepage.
 
 ## Other brand files
 
-| File                                  | Origin                            | Used for                                                                                                                                |
-| ------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/assets/fonts/Indeez-Regular.ttf` | `../../mobile-app/assets/fonts/`  | The official face. Wired to `--font-display`, so it sets every heading on the site, plus the footer wordmark. See the constraint below. |
-| `public/brand/favicon.png`            | `../../mobile-app/assets/images/` | Copied from the app.                                                                                                                    |
-| `public/brand/adaptive-icon.png`      | `../../mobile-app/assets/images/` | Copied from the app.                                                                                                                    |
-| `public/brand/starry.webp`            | Added by hand                     | The app's dark starfield texture, 1152×1534. The page backdrop, set in `src/app/layout.tsx`.                                            |
+| File                                         | Origin                                       | Used for                                                                                                                                |
+| -------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/assets/fonts/Indeez-Regular.ttf`        | `../../mobile-app/assets/fonts/`             | The official face. Wired to `--font-display`, so it sets every heading on the site, plus the footer wordmark. See the constraint below. |
+| `public/brand/favicon.png`                   | `../../mobile-app/assets/images/`            | Copied from the app.                                                                                                                    |
+| `public/brand/adaptive-icon.png`             | `../../mobile-app/assets/images/`            | Copied from the app.                                                                                                                    |
+| `public/brand/starry.webp`                   | Added by hand                                | The app's dark starfield texture, 1152×1534. The page backdrop, set in `src/app/layout.tsx`.                                            |
+| `public/brand/poloroid.png`                  | Added by hand                                | 500x500 polaroid frame with a transparent surround. Used for the nodes in the scene diagram.                                            |
+| `src/app/icon.png`, `src/app/apple-icon.png` | `../../mobile-app/assets/images/favicon.png` | The favicon and touch icon, via Next's `icon` / `apple-icon` file conventions.                                                          |
 
 ---
 
@@ -215,3 +217,42 @@ The face also ships a **single weight**. `font-bold` on a heading makes the
 browser synthesise one, which smears the heavy letterforms, so headings using
 `font-display` deliberately carry no weight class and rely on the face's own
 heft.
+
+---
+
+## Favicon
+
+`src/app/icon.png` (256px) and `src/app/apple-icon.png` (180px) are resized
+from the mobile app's launcher icon. Next's file conventions pick them up and
+emit the `<link rel="icon">` and `<link rel="apple-touch-icon">` tags, so
+nothing needs declaring in `metadata`.
+
+The scaffold shipped a default `src/app/favicon.ico`, and while that file
+existed it won at `/favicon.ico` no matter what else was declared, which is
+why the Next logo kept appearing. It has been deleted. `/favicon.ico` now
+404s, which is correct: the `<link>` tags are authoritative and only a browser
+with no link tag to follow would ask for that path.
+
+Browsers cache favicons hard. After changing one, a normal reload usually is
+not enough: hard-reload, or close and reopen the tab.
+
+---
+
+## The scene diagram uses the polaroid frame
+
+`src/components/scene-graph.tsx` renders `poloroid.png` once per node and
+places the icon and the caption using fractions measured off the 500x500
+source:
+
+| Landmark             | Fraction of the frame |
+| -------------------- | --------------------- |
+| Photo window centre  | x 0.536, y 0.428      |
+| Caption strip centre | x 0.540, y 0.836      |
+
+They are fractions rather than pixels so they hold at any render size. The
+frame is photographed at a slight angle, so those centres are deliberately not
+0.5: measuring them off the artwork is the only way to get the icon to sit in
+the window rather than near it.
+
+Caption text is dark on the white paper, which makes it the one place on the
+site that is not light-on-dark.

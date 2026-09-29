@@ -1,7 +1,7 @@
 import { SceneIcon, type SceneIconName } from "@/components/scene-icons";
 
 /**
- * The relationship graph, drawn.
+ * The relationship graph, drawn as a wall of polaroids.
  *
  * This is the hardest thing to explain in words to someone who has not seen
  * the app: that Indeez stores the real links between the participants in a
@@ -9,14 +9,23 @@ import { SceneIcon, type SceneIconName } from "@/components/scene-icons";
  * relations in the schema (artist_labels, event_artists, follows), so the
  * picture is a claim the product can back up.
  *
- * Drawn as taped-down cards on slight rotations with dashed, bowed connectors
- * rather than a tidy orthogonal flowchart. A neat one reads like a slide in a
- * deck; the app's own feed looks like a scrapbook, and this should sit next to
- * it without feeling borrowed from somewhere else.
- *
- * A compact viewBox keeps it legible when it scales down to a phone rather
- * than needing a second mobile layout.
+ * A tidy orthogonal flowchart reads like a slide in a deck. The app's own feed
+ * is a scrapbook of taped-down prints, so this is pinned photographs with the
+ * type written on the caption strip, joined by dashed lines.
  */
+
+/**
+ * Where things sit inside `poloroid.png`, measured off the 500x500 source and
+ * stored as fractions so they hold at any render size. The frame is
+ * photographed at a slight angle, so these are the centre of the photo window
+ * and the centre of the white caption strip beneath it, not a tidy grid.
+ */
+const FRAME = {
+  windowX: 0.536,
+  windowY: 0.428,
+  captionX: 0.54,
+  captionY: 0.836,
+};
 
 type Node = {
   key: SceneIconName;
@@ -24,109 +33,77 @@ type Node = {
   x: number;
   y: number;
   rotate: number;
-  tape: "left" | "right";
 };
 
 const NODES: Node[] = [
-  { key: "label", label: "Label", x: 88, y: 62, rotate: -3.5, tape: "left" },
-  { key: "venue", label: "Venue", x: 362, y: 62, rotate: 3, tape: "right" },
-  {
-    key: "record_store",
-    label: "Record store",
-    x: 88,
-    y: 318,
-    rotate: 2.5,
-    tape: "right",
-  },
-  { key: "fan", label: "Fans", x: 362, y: 318, rotate: -3, tape: "left" },
+  { key: "label", label: "Label", x: 82, y: 86, rotate: -4 },
+  { key: "venue", label: "Venue", x: 418, y: 86, rotate: 3 },
+  { key: "record_store", label: "Record store", x: 82, y: 364, rotate: 2.5 },
+  { key: "fan", label: "Fans", x: 418, y: 364, rotate: -3 },
 ];
 
-const ARTIST = { x: 225, y: 190, rotate: -1.5 } as const;
+const ARTIST = { x: 250, y: 225, rotate: -1 };
 
 /** Bowed rather than straight, so the joins read as drawn instead of plotted. */
 const EDGES = [
-  { d: "M225 190 Q150 140 88 62", label: "signed to", x: 153, y: 133 },
-  { d: "M225 190 Q300 140 362 62", label: "plays", x: 297, y: 133 },
-  { d: "M225 190 Q150 240 88 318", label: "stocked by", x: 153, y: 247 },
-  { d: "M225 190 Q300 240 362 318", label: "followed by", x: 297, y: 247 },
+  { d: "M250 225 Q160 150 82 86", label: "signed to", x: 163, y: 153 },
+  { d: "M250 225 Q340 150 418 86", label: "plays", x: 337, y: 153 },
+  { d: "M250 225 Q160 300 82 364", label: "stocked by", x: 163, y: 297 },
+  { d: "M250 225 Q340 300 418 364", label: "followed by", x: 337, y: 297 },
 ];
 
-const CARD_W = 158;
-const CARD_H = 52;
+const SIZE = 132;
+const ARTIST_SIZE = 148;
 
-function Card({
+function Polaroid({
   label,
   icon,
-  rotate,
   x,
   y,
+  rotate,
+  size = SIZE,
   primary = false,
-  tape = "left",
 }: {
   label: string;
   icon: SceneIconName;
-  rotate: number;
   x: number;
   y: number;
+  rotate: number;
+  size?: number;
   primary?: boolean;
-  tape?: "left" | "right";
 }) {
-  const tapeX = tape === "left" ? -CARD_W / 2 : CARD_W / 2;
-  const tapeAngle = tape === "left" ? -35 : 35;
+  const iconSize = size * 0.26;
 
   return (
     <g transform={`translate(${x} ${y}) rotate(${rotate})`}>
-      <rect
-        x={-CARD_W / 2}
-        y={-CARD_H / 2}
-        width={CARD_W}
-        height={CARD_H}
-        rx={10}
-        fill={primary ? "var(--color-accent)" : "var(--color-surface-2)"}
-        stroke={primary ? "var(--color-accent)" : "var(--color-line)"}
-        strokeWidth={1.5}
+      <image
+        href="/brand/poloroid.png"
+        x={-size / 2}
+        y={-size / 2}
+        width={size}
+        height={size}
       />
       <SceneIcon
         name={icon}
-        x={-CARD_W / 2 + 15}
-        y={-11}
-        width={22}
-        height={22}
-        style={{ color: primary ? "#ffffff" : "var(--color-volt)" }}
+        x={size * (FRAME.windowX - 0.5) - iconSize / 2}
+        y={size * (FRAME.windowY - 0.5) - iconSize / 2}
+        width={iconSize}
+        height={iconSize}
+        style={{ color: primary ? "var(--color-accent)" : "var(--color-volt)" }}
       />
+      {/* Written on the caption strip, so this is dark type on white paper
+          rather than the light-on-dark used everywhere else on the page. */}
       <text
-        x={-CARD_W / 2 + 47}
-        y={1}
+        x={size * (FRAME.captionX - 0.5)}
+        y={size * (FRAME.captionY - 0.5)}
+        textAnchor="middle"
         dominantBaseline="middle"
-        fontSize={15}
-        fill="#ffffff"
+        fontSize={size * 0.088}
+        fill={primary ? "var(--color-accent)" : "#15151c"}
         style={{ fontFamily: "var(--font-display)" }}
       >
         {label}
       </text>
-
-      {/* Tape over the corner. Drawn last: tape goes on top of the thing it
-          is holding down, and behind the card it just looks like a stray tab. */}
-      <g transform={`translate(${tapeX} ${-CARD_H / 2}) rotate(${tapeAngle})`}>
-        <rect
-          x={-23}
-          y={-7}
-          width={46}
-          height={14}
-          fill="#ffffff"
-          opacity={0.14}
-        />
-        <rect
-          x={-23}
-          y={-7}
-          width={46}
-          height={14}
-          fill="none"
-          stroke="#ffffff"
-          strokeOpacity={0.12}
-          strokeWidth={0.75}
-        />
-      </g>
     </g>
   );
 }
@@ -134,7 +111,7 @@ function Card({
 export function SceneGraph() {
   return (
     <svg
-      viewBox="0 0 450 380"
+      viewBox="0 0 500 450"
       className="h-auto w-full"
       role="img"
       aria-labelledby="scene-graph-title scene-graph-desc"
@@ -146,7 +123,7 @@ export function SceneGraph() {
         follow them.
       </desc>
 
-      {/* Edges first, so the opaque cards cover where they meet. */}
+      {/* Edges first, so the photographs cover where they meet. */}
       <g
         stroke="var(--color-faint)"
         strokeWidth={2}
@@ -165,9 +142,9 @@ export function SceneGraph() {
           transform={`translate(${edge.x} ${edge.y}) rotate(${i % 2 === 0 ? -2 : 2})`}
         >
           <rect
-            x={-40}
+            x={-38}
             y={-11}
-            width={80}
+            width={76}
             height={22}
             rx={11}
             fill="var(--color-bg)"
@@ -188,24 +165,23 @@ export function SceneGraph() {
       ))}
 
       {NODES.map((node) => (
-        <Card
+        <Polaroid
           key={node.key}
           label={node.label}
           icon={node.key}
           x={node.x}
           y={node.y}
           rotate={node.rotate}
-          tape={node.tape}
         />
       ))}
 
-      <Card
+      <Polaroid
         label="Artist"
         icon="artist"
         x={ARTIST.x}
         y={ARTIST.y}
         rotate={ARTIST.rotate}
-        tape="right"
+        size={ARTIST_SIZE}
         primary
       />
     </svg>
