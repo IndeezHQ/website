@@ -100,8 +100,21 @@ export default function HomePage() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10"
         >
-          <div className="bg-accent/20 absolute -top-40 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full blur-[140px]" />
-          <div className="bg-volt/5 absolute top-24 -right-32 h-[24rem] w-[24rem] rounded-full blur-[120px]" />
+          {/*
+            Anchored to the content container rather than the viewport, so the
+            accent glow stays behind the phone at every width instead of
+            drifting with the window. Centred on the viewport it landed in the
+            gap between the wordmark and the phone, lighting neither.
+          */}
+          <div className="mx-auto h-full w-full max-w-6xl px-5 sm:px-8">
+            <div className="relative h-full">
+              {/* right-0 puts the glow's right edge on the container edge; the
+                  nudge moves its centre onto the phone, which is 17rem wide. */}
+              <div className="bg-accent/20 absolute -top-40 right-0 h-[36rem] w-[36rem] translate-x-[150px] rounded-full blur-[140px]" />
+              {/* Moved left to balance, now the pink has gone right. */}
+              <div className="bg-volt/5 absolute top-28 -left-28 h-[22rem] w-[22rem] rounded-full blur-[130px]" />
+            </div>
+          </div>
         </div>
 
         <div className="mx-auto w-full max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pt-12 sm:pb-20">
@@ -229,13 +242,15 @@ export default function HomePage() {
                 <p>
                   Every profile is a real participant in a music scene, and the
                   links between them are the real ones. An artist is signed to a
-                  label. A venue books a lineup. A store stocks a record. A
-                  listener follows all of it.
+                  label. A venue books a lineup. A store puts on an in-store. A
+                  fan turns up and follows all of it.
                 </p>
                 <p>
                   Those relationships already exist offline. Indeez is where
                   they get written down, which is what turns a directory of
-                  accounts into somewhere you can actually find things.
+                  accounts into somewhere you can actually find things. Around
+                  the outside runs the loop everyone shares: any profile can
+                  follow any other.
                 </p>
                 <p className="text-fg">
                   Follow an artist and you find their label. Open a venue and
