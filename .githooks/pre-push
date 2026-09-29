@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# Runs the full check before anything leaves this machine.
+#
+# Enabled automatically by the `prepare` script on npm install, which points
+# core.hooksPath at this directory.
+#
+# This is a convenience, not the gate. `git push --no-verify` skips it, so the
+# real enforcement is the CI workflow plus a branch protection rule on main.
+set -e
+
+echo "pre-push: npm run verify (format, lint, types, copy, tests)"
+npm run verify
+echo "pre-push: ok"

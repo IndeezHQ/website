@@ -132,9 +132,11 @@ export default function HomePage() {
               </h1>
 
               <p className="text-muted mt-5 max-w-2xl text-lg leading-relaxed text-pretty">
-                Swipe through whole songs. Follow the artists, labels, venues
-                and record stores that make up your scene. See what is on near
-                you this week. Indeez is one app for all of it.
+                Streaming gave us all the music, but none of the community.
+                Social apps gave us all the community, but music was never
+                really the point. Indeez reunites the two, connecting the
+                artists, labels, venues, record stores and fans that make a
+                scene.
               </p>
 
               <div className="mt-8">

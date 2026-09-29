@@ -12,9 +12,9 @@ export const site = {
   name: "Indeez",
   domain: "indeez.world",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://indeez.world",
-  tagline: "One app for independent music",
+  tagline: "The social network for independent music",
   description:
-    "Swipe through whole songs, follow the artists, labels, venues and record stores that make up your scene, and see what's on near you. Indeez is one app for independent music.",
+    "Streaming gave us all the music but none of the community. Social apps gave us the community but music was never the point. Indeez reunites the two, for independent artists, labels, venues, record stores and fans.",
   email: {
     support: "support@indeez.world",
     info: "info@indeez.world",

@@ -36,8 +36,9 @@ Phase 1 (auth and the account portal) is next.
 
 ## Running locally
 
-Requires **Node 20.9+** (pinned in `.nvmrc`). A default shell on this machine
-may still be on Node 14, which will fail to install.
+Requires **Node 22.13+** (`.nvmrc` pins 22). Older Node will fail: jsdom needs
+`require(esm)`, which landed in 22.12. A default shell on this machine may
+still be on Node 14.
 
 ```bash
 nvm use
@@ -61,12 +62,14 @@ The dev server picks the first free port from 3000.
 
 ## Scripts
 
-| Command          | What it does                                                  |
-| ---------------- | ------------------------------------------------------------- |
-| `npm run dev`    | Dev server                                                    |
-| `npm run build`  | Production build                                              |
-| `npm run verify` | `format:check` + `lint` + `typecheck` — run before committing |
-| `npm run format` | Prettier write                                                |
+| Command              | What it does                                                        |
+| -------------------- | ------------------------------------------------------------------- |
+| `npm run dev`        | Dev server                                                          |
+| `npm run build`      | Production build                                                    |
+| `npm test`           | Run the test suite once                                             |
+| `npm run test:watch` | Tests in watch mode                                                 |
+| `npm run verify`     | format:check, lint, typecheck, check:copy, test. Run before pushing |
+| `npm run format`     | Prettier write                                                      |
 
 ---
 
@@ -116,6 +119,51 @@ dead buttons. Fill both in and the buttons appear on their own.
 child-safety reports, `info@` for privacy requests and legal notices. Changing
 one in `src/lib/site.ts` without changing the matching document will make the
 two disagree.
+
+---
+
+## Testing and the quality gate
+
+`npm run verify` is the gate. It runs formatting, linting, TypeScript, the
+copy rule and the full test suite, and it is what both the pre-push hook and
+CI run. There is no separate "quick" variant on purpose.
+
+```bash
+npm run verify
+```
+
+### What is covered
+
+164 tests across 14 files, using Vitest and Testing Library.
+
+| Area                        | What it guards                                                                                                                                                                                                             |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tests/integrity/routes`    | Every internal link resolves to a real page, every anchor to a real element, every asset to a file in `public/`, and every redirect to a page that exists.                                                                 |
+| `tests/integrity/headings`  | Every heading uses only characters the Indeez face can draw, read live from the font's `cmap` table.                                                                                                                       |
+| `tests/integrity/legal`     | The four documents exist, are not truncated, carry their effective dates, use the right contact address, and still contain the three Terms clauses the landing page cites by number.                                       |
+| `src/lib/site.test.ts`      | The store-link flag tracks the URLs, the five account types match the backend, nav destinations are unique.                                                                                                                |
+| `src/components/*.test.tsx` | Behaviour, not snapshots: the header logo hides on the landing page only, videos stay `preload="none"` until observed, reduced-motion users get still frames and real controls, the CTA never renders a dead store button. |
+
+These are chosen to catch the things that actually broke during the build. The
+route test exists because `/sign-in` shipped as a 404 for a while: a missing
+route is a runtime 404, not a build error, so nothing caught it. The heading
+test exists because the display face has 73 glyphs and falls back silently
+mid-word on anything else.
+
+### Before it reaches the remote
+
+**Local:** a `pre-push` hook in `.githooks/` runs `npm run verify`. It is
+wired up automatically by the `prepare` script on `npm install`, so a fresh
+clone gets it after one install.
+
+**CI:** `.github/workflows/ci.yml` runs `verify` and then `build` on every
+pull request and every push to `main`.
+
+> **The hook is a convenience, not the gate.** `git push --no-verify` skips
+> it. To actually stop unverified commits reaching `main`, turn on a branch
+> protection rule in GitHub: Settings, Branches, add a rule for `main`,
+> require the **Verify and build** status check to pass. That is the only
+> part of this that cannot be committed to the repo.
 
 ---
 
