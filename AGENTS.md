@@ -50,6 +50,10 @@ installed automatically by the `prepare` script:
 Both can be skipped with `--no-verify`. Do not. The GitHub branch protection
 rule on `main` is the only thing that genuinely cannot be bypassed.
 
+`verify` must pass from a clean checkout, not just on a machine with build
+artefacts lying around. `typecheck` runs `next typegen` first for that reason;
+do not remove it.
+
 New behaviour needs a test. The suite is described in the README; the
 integrity tests under `tests/integrity/` exist because each of them caught a
 real regression in this repo.
