@@ -187,10 +187,10 @@ export default function HomePage() {
                 key={pillar.title}
                 className="border-line-soft bg-surface/40 hover:border-line rounded-2xl border p-7 transition-colors"
               >
-                <span className="text-accent font-display text-sm">
+                <span className="text-accent text-sm font-bold">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="font-display mt-4 text-xl text-balance">
+                <h3 className="mt-4 text-xl font-semibold text-balance">
                   {pillar.title}
                 </h3>
                 <p className="text-muted mt-3 text-sm leading-relaxed">
@@ -221,7 +221,7 @@ export default function HomePage() {
                   label={demo.label}
                 />
                 <figcaption className="mt-6">
-                  <h3 className="font-display text-lg">{demo.title}</h3>
+                  <h3 className="text-lg font-semibold">{demo.title}</h3>
                   <p className="text-muted mt-2 text-sm leading-relaxed">
                     {demo.body}
                   </p>
@@ -286,7 +286,7 @@ export default function HomePage() {
                 <span className="border-line-soft bg-surface-2 text-volt mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border">
                   <SceneIcon name={audience.key} className="h-5 w-5" />
                 </span>
-                <h3 className="font-display text-lg">{audience.title}</h3>
+                <h3 className="text-lg font-semibold">{audience.title}</h3>
                 <p className="text-muted mt-2.5 text-sm leading-relaxed">
                   {audience.body}
                 </p>
@@ -322,7 +322,7 @@ export default function HomePage() {
                 key={principle.title}
                 className="border-line-soft bg-surface/40 flex flex-col rounded-2xl border p-7"
               >
-                <h3 className="font-display text-xl text-balance">
+                <h3 className="text-xl font-semibold text-balance">
                   {principle.title}
                 </h3>
                 <p className="text-muted mt-3 flex-1 text-sm leading-relaxed">
