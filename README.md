@@ -203,6 +203,21 @@ Without it, `verify` passes locally off a stale `.next` directory and fails in
 CI, which is the worst possible failure mode: a gate that is green on the
 machine where it matters least.
 
+### Dependency audits
+
+CI runs `npm audit --omit=dev --audit-level=high`, so the build fails if
+anything that actually ships carries a high-severity advisory.
+
+It is scoped to production deliberately. The dev tree carries a standing
+advisory against `braces`, reachable only through `eslint-config-next`, with
+no patched version published. Auditing everything would mean a permanently
+red build, and a build that is always red is one nobody reads.
+
+**Do not run `npm audit fix --force`.** It downgrades `eslint-config-next`
+from 16 to 14.2.35, which predates Next 16 and needs ESLint 7 or 8 while this
+repo is on 9. It would break linting outright to fix a dev-only denial of
+service with no route to it from a visitor.
+
 ### Before it reaches the remote
 
 **Local:** a `pre-push` hook in `.githooks/` runs `npm run verify`. It is

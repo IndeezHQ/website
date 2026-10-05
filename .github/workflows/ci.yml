@@ -24,6 +24,14 @@ jobs:
 
       - run: npm ci
 
+      # Production dependencies only. The dev tree carries a standing
+      # advisory against braces, reachable solely through
+      # eslint-config-next, with no patched version published and no path
+      # from a visitor to it. Auditing everything would mean a permanently
+      # red build, which teaches people to ignore the result. This fails
+      # only when something that actually ships is affected.
+      - run: npm audit --omit=dev --audit-level=high
+
       # format:check, lint, typecheck, check:copy, test
       - run: npm run verify
 
