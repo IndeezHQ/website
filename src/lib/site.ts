@@ -43,6 +43,18 @@ export const marketingNav = [
   { href: "/#principles", label: "Principles" },
 ] as const;
 
+/**
+ * The "Site" column in the footer. About is deliberately not in the header:
+ * the landing page should sell, and someone who wants the company behind it
+ * goes looking at the bottom of the page. It is linked directly when the site
+ * is sent to investors.
+ */
+export const siteNav = [
+  { href: "/about", label: "About" },
+  { href: "/sign-in", label: "Sign in" },
+  { href: "/sign-up", label: "Create account" },
+] as const;
+
 export const legalNav = [
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/terms", label: "Terms & Conditions" },

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Wordmark } from "@/components/wordmark";
-import { legalNav, site } from "@/lib/site";
+import { legalNav, site, siteNav } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -16,7 +16,25 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div className="flex gap-12 sm:gap-16">
+          <div className="flex flex-wrap gap-12 sm:gap-16">
+            <div>
+              <h2 className="text-fg text-xs font-semibold tracking-widest uppercase">
+                Site
+              </h2>
+              <ul className="mt-4 space-y-2.5">
+                {siteNav.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-faint hover:text-fg text-sm transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <div>
               <h2 className="text-fg text-xs font-semibold tracking-widest uppercase">
                 Legal

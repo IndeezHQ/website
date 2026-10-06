@@ -24,16 +24,19 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.name,
+  /*
+   * No explicit title here on purpose. Setting one would pin every page's
+   * share card to the home page title, so /about would be shared as if it
+   * were the landing page. Left out, each page's own title flows through.
+   */
   openGraph: {
     type: "website",
     siteName: site.name,
-    title: `${site.name} | ${site.tagline}`,
     description: site.description,
     url: site.url,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} | ${site.tagline}`,
     description: site.description,
   },
 };
@@ -49,6 +52,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${spaceGrotesk.variable} ${indeezWordmark.variable} h-full antialiased`}
     >
       <body className="bg-bg text-fg flex min-h-full flex-col font-sans">
+        {/*
+          Organization schema. This is what search engines read to connect the
+          name, the logo and the site into one entity, which is what produces
+          a brand panel rather than a plain blue link.
+
+          `sameAs` is where the social profiles go once their URLs are settled.
+        */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: site.name,
+              url: site.url,
+              logo: `${site.url}/icon.png`,
+              description: site.description,
+              email: site.email.info,
+            }),
+          }}
+        />
         {/*
           The app's starfield texture, carried over as the page backdrop.
 

@@ -92,11 +92,16 @@ tests/
 └── integrity/             # routes, headings, legal documents
 src/
 ├── app/
-│   ├── (marketing)/       # landing, legal documents, sign in, sign up
+│   ├── (marketing)/       # landing, about, legal documents, sign in, sign up
+│   ├── opengraph-image.tsx # the link preview card, generated at build time
+│   ├── robots.ts          # crawl rules
+│   ├── sitemap.ts         # derived from the route list, with a test
 │   ├── icon.png           # favicon, via Next's file convention
 │   ├── globals.css        # brand tokens (mirrors the app's theme.ts)
 │   └── layout.tsx         # root layout, fonts, metadata, starfield backdrop
-├── assets/fonts/          # Indeez-Regular.ttf, the heading face
+├── assets/
+│   ├── fonts/             # Indeez-Regular.ttf plus Inter TTFs for the OG image
+│   └── og/                # artwork inlined into the link preview card
 ├── components/            # each with a colocated *.test.tsx
 ├── content/legal/         # the legal documents, as Markdown
 └── lib/
@@ -217,6 +222,23 @@ red build, and a build that is always red is one nobody reads.
 from 16 to 14.2.35, which predates Next 16 and needs ESLint 7 or 8 while this
 repo is on 9. It would break linting outright to fix a dev-only denial of
 service with no route to it from a visitor.
+
+### Link previews and crawling
+
+`src/app/opengraph-image.tsx` generates the card that appears when the site is
+pasted into WhatsApp, LinkedIn, Slack or a message. It is built at build time,
+so **every asset it uses is read off disk and inlined as a data URI**. Nothing
+in that file may fetch a URL: during a Vercel build there is no server to
+fetch from.
+
+Satori, which renders it, cannot read woff2, which is what `next/font` ships.
+That is why `src/assets/fonts/` carries Inter as TTF as well. The site itself
+still uses `next/font`.
+
+`robots.ts` and `sitemap.ts` are the Next file conventions. The sitemap is
+derived from the legal document registry rather than typed out, and a test
+asserts it covers every indexable route and never lists a page marked
+`noindex`.
 
 ### Before it reaches the remote
 
