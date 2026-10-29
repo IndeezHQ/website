@@ -92,7 +92,7 @@ export default async function SongPage({ params }: Props) {
   }
 
   return (
-    <ShareShell>
+    <ShareShell fitViewport>
       <div className="border-line-soft bg-surface/40 overflow-hidden rounded-3xl border">
         {song.artworkUrl ? (
           /*
@@ -113,7 +113,7 @@ export default async function SongPage({ params }: Props) {
           </div>
         )}
 
-        <div className="p-6">
+        <div className="p-5">
           <h1 className="text-2xl leading-tight font-semibold tracking-tight text-balance">
             {song.title}
           </h1>
@@ -124,7 +124,7 @@ export default async function SongPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-6">
         <OpenInApp path={`song/${song.songId}`} />
         <div className="mt-3">
           <StoreBadges />

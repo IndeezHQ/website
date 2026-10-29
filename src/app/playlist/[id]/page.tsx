@@ -91,7 +91,7 @@ export default async function PlaylistPage({ params }: Props) {
   }
 
   return (
-    <ShareShell>
+    <ShareShell fitViewport>
       <div className="border-line-soft bg-surface/40 overflow-hidden rounded-3xl border">
         {playlist.coverUrl ? (
           /*
@@ -111,7 +111,7 @@ export default async function PlaylistPage({ params }: Props) {
           </div>
         )}
 
-        <div className="p-6">
+        <div className="p-5">
           <h1 className="text-2xl leading-tight font-semibold tracking-tight text-balance">
             {playlist.title}
           </h1>
@@ -124,7 +124,7 @@ export default async function PlaylistPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className="mt-6">
         <OpenInApp path={`playlist/${playlist.playlistId}`} />
         <div className="mt-3">
           <StoreBadges />
