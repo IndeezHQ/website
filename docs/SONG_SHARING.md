@@ -20,11 +20,18 @@ the website half of that.
 
 ## What is outstanding, and who owns it
 
-**1. The `song-card` edge function. Backend repo. Nothing works without it.**
+**1. Deploy the backend. It is written but not live.**
 
-The page is finished and reads from an endpoint that does not exist yet, so
-every song currently renders the "not available" state. The contract is
-below. Until it ships, this feature is inert.
+In `../backend`, uncommitted at the time of writing:
+
+- `supabase/migrations/20261101000000_public_song_card.sql`, the
+  `get_public_song_card` RPC
+- `supabase/functions/song-card/index.ts`
+- the `[functions.song-card] verify_jwt = false` entry in `config.toml`
+
+Until those are pushed and deployed, every song renders the unavailable
+state. Note that the backend repo had other people's uncommitted migrations
+sitting alongside these, so pushing needs a look at what else goes with it.
 
 **2. Apple Team ID and the Android signing fingerprint. External.**
 
@@ -46,7 +53,8 @@ route mapping, and switching `ShareSongSheet` from `mobileapp://song/<id>` to
 
 ## The `song-card` contract
 
-A public, anon-invokable Supabase edge function.
+A public, anon-invokable Supabase edge function (`verify_jwt = false`),
+backed by the `get_public_song_card` RPC.
 
 ```
 GET /functions/v1/song-card?songId=<uuid>
@@ -75,16 +83,22 @@ a real profile. Both may be null.
 
 ### The part that matters
 
-The function runs as the service role, which **bypasses RLS**. It must
-therefore re-implement the visibility rules rather than assume the database
-will enforce them: copy the logic from `song_publicly_visible` and
-`profile_visible_to_caller`. A song that is unreleased, private, or belongs
-to a hidden artist must 404. Leaking a title or a cover for an unreleased
-track through this endpoint would be a real failure, and the website cannot
-catch it because the website is the thing being lied to.
+The edge function runs as the service role, which **bypasses RLS**. The
+visibility gate therefore lives in SQL, inside `get_public_song_card`, which
+reuses the app's own `song_publicly_visible` and `profile_visible_to_caller`
+rather than restating the rules. Two copies of a visibility rule is one copy
+that eventually drifts, and the one that drifts silently is the one that
+leaks.
 
-`get_public_song` cannot be reused directly: it is granted to `authenticated`
-only, and every visitor here is anonymous.
+`get_public_song` cannot be reused directly: it raises when `auth.uid()` is
+null, and every visitor here is anonymous.
+
+Artwork is signed for an hour, comfortably longer than the five minutes this
+site caches the response, so a visitor served a cached card still gets a live
+signature. The function asks for a 1200px transform first and falls back to
+signing the original if image transformation is unavailable, logging when it
+does: that add-on is not on every Supabase plan, and nothing else in the
+product uses it yet.
 
 ### Testing the page before the function exists
 
