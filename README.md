@@ -26,7 +26,7 @@ Phase 1 (auth and the account portal) is next.
 - **React 19** · **TypeScript**
 - **Tailwind CSS v4**
 - **Supabase** — `@supabase/ssr` for cookie-based sessions
-- **Vitest** · **Testing Library** — 194 tests
+- **Vitest** · **Testing Library** — 211 tests
 - **Prettier** · **ESLint**
 
 Requires **Node 22.13+**. See [Running locally](#running-locally).
@@ -94,6 +94,8 @@ src/
 ├── app/
 │   ├── (marketing)/       # landing, about, legal documents, sign in, sign up
 │   ├── song/[id]/         # shared song links: page + per song preview image
+│   ├── playlist/[id]/     # shared playlist links, same shape
+│   ├── join/              # page co-management invite landing
 │   ├── .well-known/       # iOS and Android app link association files
 │   ├── opengraph-image.tsx # the link preview card, generated at build time
 │   ├── robots.ts          # crawl rules
@@ -184,7 +186,7 @@ npm run verify
 
 ### What is covered
 
-194 tests across 19 files, using Vitest and Testing Library.
+211 tests across 21 files, using Vitest and Testing Library.
 
 | Area                        | What it guards                                                                                                                                                                                                                                                                             |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -264,7 +266,7 @@ pull request and every push to `main`.
 - [`AGENTS.md`](AGENTS.md) — branching, the quality gate, and the house rules for copy
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phasing to full app parity
 - [`docs/BRAND_ASSETS.md`](docs/BRAND_ASSETS.md) — logo, videos, textures and how they are produced
-- [`docs/SONG_SHARING.md`](docs/SONG_SHARING.md) — shared song links, the `song-card` contract, and what is still outstanding
+- [`docs/SHARE_PAGES.md`](docs/SHARE_PAGES.md) — the song, playlist and invite landing pages, the card contracts, and what is still outstanding
 - [`../backend/README.md`](../backend/README.md) — schema, RLS, RPCs
 - [`../backend/FRONTEND_HANDOFF.md`](../backend/FRONTEND_HANDOFF.md) — auth integration guide
 - [`../mobile-app/docs/BACKEND_IDENTITY_MODEL.md`](../mobile-app/docs/BACKEND_IDENTITY_MODEL.md) — the profiles/Pages identity model

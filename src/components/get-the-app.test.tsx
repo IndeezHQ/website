@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { GetTheApp } from "./get-the-app";
-import { appStoreLinksLive } from "@/lib/site";
 
 describe("GetTheApp", () => {
   it("always offers the primary action", () => {
@@ -12,24 +11,16 @@ describe("GetTheApp", () => {
     ).toHaveAttribute("href", "/sign-up");
   });
 
-  it("says the apps are coming rather than showing dead store buttons", () => {
+  it("offers both stores without ever linking nowhere", () => {
+    // The store badges carry their own coming-soon behaviour; what matters
+    // here is that the CTA shows them and that none of its links is dead.
     render(<GetTheApp />);
 
-    if (appStoreLinksLive) {
-      expect(
-        screen.queryByText(/on their way to the stores/i)
-      ).not.toBeInTheDocument();
-    } else {
-      // The whole point of the flag: no button that goes nowhere.
-      expect(
-        screen.getByText(/on their way to the stores/i)
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole("link", { name: /download for iphone/i })
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole("link", { name: /get it on android/i })
-      ).not.toBeInTheDocument();
+    expect(screen.getByText("App Store")).toBeInTheDocument();
+    expect(screen.getByText("Google Play")).toBeInTheDocument();
+
+    for (const link of screen.getAllByRole("link")) {
+      expect(link.getAttribute("href")).toBeTruthy();
     }
   });
 });

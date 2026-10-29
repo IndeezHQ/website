@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-import { appStoreLinksLive, site } from "@/lib/site";
+import { StoreBadges } from "./store-badges";
+
+import { site } from "@/lib/site";
 
 /**
  * Placeholder for the routes the header already links to but that Phase 1
@@ -42,11 +44,9 @@ export function ComingSoon({ title, body }: { title: string; body: string }) {
         </a>
       </div>
 
-      {!appStoreLinksLive && (
-        <p className="text-faint mt-6 text-sm">
-          The iPhone and Android apps are on their way to the stores.
-        </p>
-      )}
+      <div className="mt-8">
+        <StoreBadges align="start" />
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ const entries = sitemap();
 const urls = entries.map((e) => e.url);
 
 /** Routes that carry `robots: { index: false }` in their page metadata. */
-const NOINDEX = ["/sign-in", "/sign-up"];
+const NOINDEX = ["/sign-in", "/sign-up", "/join"];
 
 describe("sitemap", () => {
   it("lists the home page first and at top priority", () => {

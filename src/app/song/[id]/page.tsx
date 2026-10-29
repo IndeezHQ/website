@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { OpenInApp } from "./open-in-app";
-
+import { OpenInApp } from "@/components/open-in-app";
+import { ShareShell } from "@/components/share-shell";
 import { StoreBadges } from "@/components/store-badges";
 import { site } from "@/lib/site";
 import { getSongCard } from "@/lib/song";
@@ -54,26 +54,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function Shell({ children }: { children: React.ReactNode }) {
-  return (
-    <main className="flex min-h-full flex-1 flex-col items-center justify-center px-5 py-14">
-      <div className="w-full max-w-sm">{children}</div>
-
-      <footer className="text-faint mt-14 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
-        <Link href="/" className="hover:text-fg transition-colors">
-          {site.domain}
-        </Link>
-        <Link href="/privacy" className="hover:text-fg transition-colors">
-          Privacy
-        </Link>
-        <Link href="/terms" className="hover:text-fg transition-colors">
-          Terms
-        </Link>
-      </footer>
-    </main>
-  );
-}
-
 export default async function SongPage({ params }: Props) {
   const { id } = await params;
   const song = await getSongCard(id);
@@ -85,7 +65,7 @@ export default async function SongPage({ params }: Props) {
    */
   if (!song) {
     return (
-      <Shell>
+      <ShareShell>
         <div className="border-line-soft bg-surface/40 rounded-3xl border p-8 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
             This song is not available
@@ -107,12 +87,12 @@ export default async function SongPage({ params }: Props) {
             <StoreBadges />
           </div>
         </div>
-      </Shell>
+      </ShareShell>
     );
   }
 
   return (
-    <Shell>
+    <ShareShell>
       <div className="border-line-soft bg-surface/40 overflow-hidden rounded-3xl border">
         {song.artworkUrl ? (
           /*
@@ -145,11 +125,11 @@ export default async function SongPage({ params }: Props) {
       </div>
 
       <div className="mt-8">
-        <OpenInApp songId={song.songId} />
+        <OpenInApp path={`song/${song.songId}`} />
         <div className="mt-3">
           <StoreBadges />
         </div>
       </div>
-    </Shell>
+    </ShareShell>
   );
 }

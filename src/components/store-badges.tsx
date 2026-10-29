@@ -50,8 +50,13 @@ const badges = [
   },
 ] as const;
 
+/*
+ * `grow basis-36` with a cap lets one component serve both homes: on the song
+ * page the pair fills the narrow column, and in the landing CTA they sit at a
+ * sensible badge width instead of stretching across the whole section.
+ */
 const face =
-  "border-line hover:border-fg/30 flex items-center justify-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-colors";
+  "border-line hover:border-fg/30 flex max-w-48 grow basis-36 items-center justify-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-colors";
 
 type FaceProps = Omit<(typeof badges)[number], "key" | "href">;
 
@@ -60,7 +65,9 @@ function Face({ Mark, lead, name }: FaceProps) {
     <>
       <Mark className="h-6 w-6 shrink-0" />
       <span className="leading-tight">
-        <span className="text-faint block text-[0.6rem] tracking-wide uppercase">
+        {/* Never wraps: in a narrow column "Download on the" broke onto a
+            second line and the badge stopped looking like a badge. */}
+        <span className="text-faint block text-[9px] tracking-wide whitespace-nowrap uppercase">
           {lead}
         </span>
         <span className="block text-sm font-medium">{name}</span>
@@ -69,12 +76,19 @@ function Face({ Mark, lead, name }: FaceProps) {
   );
 }
 
-export function StoreBadges() {
+export function StoreBadges({
+  align = "center",
+}: {
+  /** "start" for the left-aligned pages, "center" for the share pages. */
+  align?: "start" | "center";
+}) {
   const [pending, setPending] = useState<string | null>(null);
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-3">
+      <div
+        className={`flex flex-wrap gap-3 ${align === "center" ? "justify-center" : ""}`}
+      >
         {badges.map((badge) =>
           badge.href ? (
             <a key={badge.key} href={badge.href} className={face}>
@@ -100,7 +114,9 @@ export function StoreBadges() {
       */}
       <p
         aria-live="polite"
-        className="text-faint mt-3 min-h-[1.25rem] text-center text-xs"
+        className={`text-faint mt-3 min-h-[1.25rem] text-xs ${
+          align === "center" ? "text-center" : ""
+        }`}
       >
         {pending && `Coming soon on ${pending}.`}
       </p>

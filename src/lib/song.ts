@@ -9,7 +9,7 @@ import "server-only";
  * Supabase edge function, `song-card`, which re-implements the same
  * visibility rules and signs the artwork server side.
  *
- * See docs/SONG_SHARING.md for the contract and what is still outstanding.
+ * See docs/SHARE_PAGES.md for the contract and what is still outstanding.
  */
 
 export type SongCard = {

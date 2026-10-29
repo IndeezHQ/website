@@ -1,37 +1,48 @@
-# Shareable song links
+# Share landing pages
 
-When someone shares a song from the app, the link should be a real web URL
-that previews with the artwork and converts the person who taps it. This is
-the website half of that.
+When someone shares from the app, the link should be a real web URL that
+previews with the artwork and converts the person who taps it. This is the
+website half of that.
 
-`indeez.world/song/<songId>`
+```
+indeez.world/song/<songId>
+indeez.world/playlist/<playlistId>
+indeez.world/join?token=<token>
+```
+
+All three are the same page in three costumes: server rendered, Open Graph
+tags in the HTML, a preview image, store badges, and a way into the app.
+They share `ShareShell`, `OpenInApp` and `StoreBadges`.
 
 ---
 
 ## What is built
 
-| Piece                   | Where                                   | State         |
-| ----------------------- | --------------------------------------- | ------------- |
-| `/song/[id]` page       | `src/app/song/[id]/page.tsx`            | Done          |
-| Open Graph tags         | same file, `generateMetadata`           | Done          |
-| Per-song preview image  | `src/app/song/[id]/opengraph-image.tsx` | Done          |
-| Data layer              | `src/lib/song.ts`                       | Done          |
-| `.well-known` app links | `src/app/.well-known/`                  | Done, dormant |
+| Piece                      | Where                                       | State         |
+| -------------------------- | ------------------------------------------- | ------------- |
+| `/song/[id]` page          | `src/app/song/[id]/page.tsx`                | Live          |
+| `/playlist/[id]` page      | `src/app/playlist/[id]/page.tsx`            | Needs backend |
+| `/join` page               | `src/app/join/page.tsx`                     | Done          |
+| Open Graph tags            | each page, `generateMetadata`               | Done          |
+| Per-song preview image     | `src/app/song/[id]/opengraph-image.tsx`     | Done          |
+| Per-playlist preview image | `src/app/playlist/[id]/opengraph-image.tsx` | Needs backend |
+| Data layers                | `src/lib/song.ts`, `src/lib/playlist.ts`    | Done          |
+| `.well-known` app links    | `src/app/.well-known/`                      | Done, dormant |
+
+The `/join` page needs no backend at all, by design. See below.
 
 ## What is outstanding, and who owns it
 
-**1. Deploy the backend. It is written but not live.**
+**1. Deploy the playlist backend.** The song half is live. The playlist half
+is written and committed in `../backend` but not deployed:
 
-In `../backend`, uncommitted at the time of writing:
+- `supabase/migrations/20261102000000_public_playlist_card.sql`, the
+  `get_public_playlist_card` RPC
+- `supabase/functions/playlist-card/index.ts`
+- the `[functions.playlist-card] verify_jwt = false` entry in `config.toml`
 
-- `supabase/migrations/20261101000000_public_song_card.sql`, the
-  `get_public_song_card` RPC
-- `supabase/functions/song-card/index.ts`
-- the `[functions.song-card] verify_jwt = false` entry in `config.toml`
-
-Until those are pushed and deployed, every song renders the unavailable
-state. Note that the backend repo had other people's uncommitted migrations
-sitting alongside these, so pushing needs a look at what else goes with it.
+Until those are applied and deployed, every playlist renders the unavailable
+state, which is a safe default rather than a broken one.
 
 **2. Apple Team ID and the Android signing fingerprint. External.**
 
@@ -45,19 +56,23 @@ Drop them into `appLinks` in `src/lib/site.ts`. The two `.well-known` routes
 shows "on their way to the stores" until they are filled in, at which point
 the download buttons appear on their own.
 
-**4. The app side.** Associated Domains on iOS, an intent filter on Android,
-route mapping, and switching `ShareSongSheet` from `mobileapp://song/<id>` to
-`https://indeez.world/song/<id>`.
+**4. The app side.** Associated Domains on iOS, an intent filter on Android
+covering `/song`, `/playlist` and `/join`, route mapping, and switching
+`ShareSongSheet` from `mobileapp://song/<id>` to
+`https://indeez.world/song/<id>`. The app also needs a `mobileapp://join`
+route that opens the invite flow with the token prefilled, and a `Share a
+link` option on `SharePlaylistSheet`.
 
 ---
 
-## The `song-card` contract
+## The card contracts
 
-A public, anon-invokable Supabase edge function (`verify_jwt = false`),
-backed by the `get_public_song_card` RPC.
+Two public, anon-invokable Supabase edge functions (`verify_jwt = false`),
+each backed by an RPC that holds the visibility rules.
 
 ```
 GET /functions/v1/song-card?songId=<uuid>
+GET /functions/v1/playlist-card?playlistId=<uuid>
 ```
 
 **200**
@@ -80,6 +95,25 @@ GET /functions/v1/song-card?songId=<uuid>
 `label` is the display name, from `songs.label_name` or the linked label
 profile. `labelProfileId` is set only when `songs.label_profile_id` points at
 a real profile. Both may be null.
+
+**200** from `playlist-card`
+
+```json
+{
+  "playlistId": "…",
+  "title": "…",
+  "ownerName": "…",
+  "ownerHandle": "…",
+  "ownerProfileId": "…",
+  "coverUrl": "https://…",
+  "trackCount": 12
+}
+```
+
+A playlist is shareable only when `is_listed` is true, it is not somebody's
+Top Five, and the owner is visible. The Top Five exclusion matters: it is a
+real playlist row created lazily for every profile, so without it every
+profile would have a shareable playlist nobody made.
 
 ### The part that matters
 
@@ -148,6 +182,14 @@ guidelines.
 piece of Indeez artwork on a page someone reached from a friend's message, so
 it sits on the thing we want tapped. The image's alt text is what makes the
 button still announce as "Open in Indeez".
+
+**The invite page has no backend, and that is the design.** The token in
+`/join?token=` is a bearer credential: whoever holds the URL holds the
+invite. An endpoint that turned a token into a page name and a role would be
+an endpoint that turns an intercepted or forwarded link into private
+information, so the page says nothing the holder does not already have, and
+redemption stays in the app behind auth. The token is kept out of the Referer
+header by `referrer: "no-referrer"`, and out of search by `robots.ts`.
 
 **The "Open in Indeez" button is a link, not a redirect.** Bouncing visitors
 to a custom scheme on load shows a "cannot open page" dialog to everyone
