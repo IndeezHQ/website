@@ -26,7 +26,7 @@ Phase 1 (auth and the account portal) is next.
 - **React 19** · **TypeScript**
 - **Tailwind CSS v4**
 - **Supabase** — `@supabase/ssr` for cookie-based sessions
-- **Vitest** · **Testing Library** — 187 tests
+- **Vitest** · **Testing Library** — 194 tests
 - **Prettier** · **ESLint**
 
 Requires **Node 22.13+**. See [Running locally](#running-locally).
@@ -184,15 +184,15 @@ npm run verify
 
 ### What is covered
 
-187 tests across 17 files, using Vitest and Testing Library.
+194 tests across 19 files, using Vitest and Testing Library.
 
-| Area                        | What it guards                                                                                                                                                                                                             |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tests/integrity/routes`    | Every internal link resolves to a real page, every anchor to a real element, every asset to a file in `public/`, and every redirect to a page that exists.                                                                 |
-| `tests/integrity/headings`  | Every heading uses only characters the Indeez face can draw, read live from the font's `cmap` table.                                                                                                                       |
-| `tests/integrity/legal`     | The four documents exist, are not truncated, carry their effective dates, use the right contact address, and still contain the three Terms clauses the landing page cites by number.                                       |
-| `src/lib/site.test.ts`      | The store-link flag tracks the URLs, the five account types match the backend, nav destinations are unique.                                                                                                                |
-| `src/components/*.test.tsx` | Behaviour, not snapshots: the header logo hides on the landing page only, videos stay `preload="none"` until observed, reduced-motion users get still frames and real controls, the CTA never renders a dead store button. |
+| Area                        | What it guards                                                                                                                                                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tests/integrity/routes`    | Every internal link resolves to a real page, every anchor to a real element, every asset to a file in `public/`, and every redirect to a page that exists.                                                                                                                                 |
+| `tests/integrity/headings`  | Every heading uses only characters the Indeez face can draw, read live from the font's `cmap` table.                                                                                                                                                                                       |
+| `tests/integrity/legal`     | The four documents exist, are not truncated, carry their effective dates, use the right contact address, and still contain the three Terms clauses the landing page cites by number.                                                                                                       |
+| `src/lib/site.test.ts`      | The store-link flag tracks the URLs, the five account types match the backend, nav destinations are unique.                                                                                                                                                                                |
+| `src/components/*.test.tsx` | Behaviour, not snapshots: the header logo hides on the landing page only, videos stay `preload="none"` until observed, reduced-motion users get still frames and real controls, the CTA never renders a dead store button, the store badges say "coming soon" rather than linking nowhere. |
 
 These are chosen to catch the things that actually broke during the build. The
 route test exists because `/sign-in` shipped as a 404 for a while: a missing

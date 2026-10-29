@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { OpenInApp } from "./open-in-app";
 
-import { appStoreLinksLive, site, stores } from "@/lib/site";
+import { StoreBadges } from "@/components/store-badges";
+import { site } from "@/lib/site";
 import { getSongCard } from "@/lib/song";
 
 /**
@@ -73,37 +74,6 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function StoreButtons() {
-  if (!appStoreLinksLive) {
-    return (
-      <p className="text-faint mt-4 text-center text-sm">
-        The iPhone and Android apps are on their way to the stores.
-      </p>
-    );
-  }
-
-  return (
-    <div className="mt-3 flex flex-col gap-3">
-      {stores.ios && (
-        <a
-          href={stores.ios}
-          className="border-line hover:border-fg/30 block w-full rounded-full border px-6 py-3.5 text-center text-sm font-medium transition-colors"
-        >
-          Download on the App Store
-        </a>
-      )}
-      {stores.android && (
-        <a
-          href={stores.android}
-          className="border-line hover:border-fg/30 block w-full rounded-full border px-6 py-3.5 text-center text-sm font-medium transition-colors"
-        >
-          Get it on Google Play
-        </a>
-      )}
-    </div>
-  );
-}
-
 export default async function SongPage({ params }: Props) {
   const { id } = await params;
   const song = await getSongCard(id);
@@ -133,7 +103,9 @@ export default async function SongPage({ params }: Props) {
           >
             Explore Indeez
           </Link>
-          <StoreButtons />
+          <div className="mt-3">
+            <StoreBadges />
+          </div>
         </div>
       </Shell>
     );
@@ -174,7 +146,9 @@ export default async function SongPage({ params }: Props) {
 
       <div className="mt-8">
         <OpenInApp songId={song.songId} />
-        <StoreButtons />
+        <div className="mt-3">
+          <StoreBadges />
+        </div>
       </div>
     </Shell>
   );

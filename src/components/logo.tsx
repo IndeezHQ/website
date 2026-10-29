@@ -14,6 +14,52 @@ import Link from "next/link";
  * the network level — the animated file is never fetched for those users, which
  * a CSS-based approach could not achieve.
  */
+export function LogoImage({
+  className = "h-11 w-auto",
+  priority = false,
+  alt = "Indeez",
+}: {
+  className?: string;
+  priority?: boolean;
+  /** Pass "" where surrounding text already names the brand. */
+  alt?: string;
+}) {
+  return (
+    /*
+      `contents` removes the <picture> box from the layout so the <img>
+      becomes the flex item directly. Without it the picture is the flex
+      item, its width is content-based, and Tailwind's preflight
+      `max-width: 100%` on the image resolves against that — a circular
+      dependency that collapses the logo to zero width.
+    */
+    <picture className="contents">
+      <source
+        srcSet="/brand/logo-static.webp"
+        media="(prefers-reduced-motion: reduce)"
+        type="image/webp"
+      />
+      {/*
+        A plain <img> rather than next/image: the Image component's optimizer
+        re-encodes and would drop the animation, and `unoptimized` cannot be
+        combined with the <picture> art direction above. The asset is already
+        hand-optimised and served straight from /public, so there is nothing
+        for the optimizer to add.
+      */}
+      <img
+        src="/brand/logo.webp"
+        alt={alt}
+        width={152}
+        height={132}
+        className={`max-w-none ${className}`}
+        decoding="async"
+        fetchPriority={priority ? "high" : undefined}
+        loading={priority ? "eager" : undefined}
+      />
+    </picture>
+  );
+}
+
+/** The header logo: the same artwork, linked home. */
 export function Logo({
   className = "h-11 w-auto",
   priority = false,
@@ -26,37 +72,7 @@ export function Logo({
       href="/"
       className="inline-flex items-center transition-opacity hover:opacity-80"
     >
-      {/*
-        `contents` removes the <picture> box from the layout so the <img>
-        becomes the flex item directly. Without it the picture is the flex
-        item, its width is content-based, and Tailwind's preflight
-        `max-width: 100%` on the image resolves against that — a circular
-        dependency that collapses the logo to zero width.
-      */}
-      <picture className="contents">
-        <source
-          srcSet="/brand/logo-static.webp"
-          media="(prefers-reduced-motion: reduce)"
-          type="image/webp"
-        />
-        {/*
-          A plain <img> rather than next/image: the Image component's optimizer
-          re-encodes and would drop the animation, and `unoptimized` cannot be
-          combined with the <picture> art direction above. The asset is already
-          hand-optimised and served straight from /public, so there is nothing
-          for the optimizer to add.
-        */}
-        <img
-          src="/brand/logo.webp"
-          alt="Indeez"
-          width={152}
-          height={132}
-          className={`max-w-none ${className}`}
-          decoding="async"
-          fetchPriority={priority ? "high" : undefined}
-          loading={priority ? "eager" : undefined}
-        />
-      </picture>
+      <LogoImage className={className} priority={priority} />
     </Link>
   );
 }

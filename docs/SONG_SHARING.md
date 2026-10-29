@@ -136,6 +136,19 @@ soft-404 concern does not apply.
 and the service being unreachable all render one state. Distinguishing them
 would turn the page into an oracle for which song ids exist.
 
+**The store badges are buttons until the stores are live.** `stores` in
+lib/site.ts is empty, so pressing one says "Coming soon" rather than going
+nowhere. Fill either URL in and that badge becomes a real link with no code
+change. The Apple and Play marks are drawn so they can take the page's colour
+on a dark background: **swap them for Apple's and Google's official badge
+artwork before launch**, which both companies require in their marketing
+guidelines.
+
+**The "Open in Indeez" button carries the logo, not the word.** It is the one
+piece of Indeez artwork on a page someone reached from a friend's message, so
+it sits on the thing we want tapped. The image's alt text is what makes the
+button still announce as "Open in Indeez".
+
 **The "Open in Indeez" button is a link, not a redirect.** Bouncing visitors
 to a custom scheme on load shows a "cannot open page" dialog to everyone
 without the app, which is most of the traffic a share link brings.
