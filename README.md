@@ -26,7 +26,7 @@ Phase 1 (auth and the account portal) is next.
 - **React 19** · **TypeScript**
 - **Tailwind CSS v4**
 - **Supabase** — `@supabase/ssr` for cookie-based sessions
-- **Vitest** · **Testing Library** — 164 tests
+- **Vitest** · **Testing Library** — 187 tests
 - **Prettier** · **ESLint**
 
 Requires **Node 22.13+**. See [Running locally](#running-locally).
@@ -184,7 +184,7 @@ npm run verify
 
 ### What is covered
 
-164 tests across 14 files, using Vitest and Testing Library.
+187 tests across 17 files, using Vitest and Testing Library.
 
 | Area                        | What it guards                                                                                                                                                                                                             |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
