@@ -26,7 +26,7 @@ Phase 1 (auth and the account portal) is next.
 - **React 19** · **TypeScript**
 - **Tailwind CSS v4**
 - **Supabase** — `@supabase/ssr` for cookie-based sessions
-- **Vitest** · **Testing Library** — 211 tests
+- **Vitest** · **Testing Library** — 216 tests
 - **Prettier** · **ESLint**
 
 Requires **Node 22.13+**. See [Running locally](#running-locally).
@@ -186,12 +186,13 @@ npm run verify
 
 ### What is covered
 
-211 tests across 21 files, using Vitest and Testing Library.
+216 tests across 22 files, using Vitest and Testing Library.
 
 | Area                        | What it guards                                                                                                                                                                                                                                                                             |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `tests/integrity/routes`    | Every internal link resolves to a real page, every anchor to a real element, every asset to a file in `public/`, and every redirect to a page that exists.                                                                                                                                 |
 | `tests/integrity/headings`  | Every heading uses only characters the Indeez face can draw, read live from the font's `cmap` table.                                                                                                                                                                                       |
+| `tests/integrity/og-images` | Every link preview image actually renders. Satori has rules the compiler knows nothing about, and the playlist card shipped broken because of one.                                                                                                                                         |
 | `tests/integrity/legal`     | The four documents exist, are not truncated, carry their effective dates, use the right contact address, and still contain the three Terms clauses the landing page cites by number.                                                                                                       |
 | `src/lib/site.test.ts`      | The store-link flag tracks the URLs, the five account types match the backend, nav destinations are unique.                                                                                                                                                                                |
 | `src/components/*.test.tsx` | Behaviour, not snapshots: the header logo hides on the landing page only, videos stay `preload="none"` until observed, reduced-motion users get still frames and real controls, the CTA never renders a dead store button, the store badges say "coming soon" rather than linking nowhere. |
@@ -238,6 +239,12 @@ fetch from.
 Satori, which renders it, cannot read woff2, which is what `next/font` ships.
 That is why `src/assets/fonts/` carries Inter as TTF as well. The site itself
 still uses `next/font`.
+
+**The cards are re-encoded as JPEG** by `src/lib/og.ts`, because
+`ImageResponse` only emits PNG and a PNG of album artwork at 1200x630 is well
+over WhatsApp's roughly 300KB preview limit. Over it, the platform shows a
+bare title and no image, with no error anywhere. `tests/integrity/og-images`
+renders every card and asserts both that it draws and that it fits.
 
 `robots.ts` and `sitemap.ts` are the Next file conventions. The sitemap is
 derived from the legal document registry rather than typed out, and a test

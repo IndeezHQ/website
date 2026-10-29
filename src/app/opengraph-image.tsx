@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { ImageResponse } from "next/og";
 
+import { asJpeg, OG_CONTENT_TYPE } from "@/lib/og";
 import { site } from "@/lib/site";
 
 /**
@@ -20,7 +21,7 @@ import { site } from "@/lib/site";
 
 export const alt = `${site.name}: ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const contentType = OG_CONTENT_TYPE;
 
 const asset = (...p: string[]) =>
   path.join(process.cwd(), "src", "assets", ...p);
@@ -38,76 +39,80 @@ export default async function Image() {
     dataUri(asset("og", "starry.jpg"), "image/jpeg"),
   ]);
 
-  return new ImageResponse(
-    <div
-      style={{
-        width: size.width,
-        height: size.height,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        backgroundColor: "#07070A",
-        padding: 84,
-        position: "relative",
-      }}
-    >
-      <img
-        src={starry}
-        alt=""
-        width={size.width}
-        height={size.height}
-        style={{ position: "absolute", top: 0, left: 0, opacity: 0.55 }}
-      />
+  return asJpeg(
+    new ImageResponse(
       <div
         style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
           width: size.width,
           height: size.height,
-          background:
-            "radial-gradient(750px 520px at 78% 30%, rgba(235,0,139,0.34), rgba(7,7,10,0) 70%)",
-        }}
-      />
-
-      <img src={wordmark} alt="" width={372} height={241} />
-
-      <div
-        style={{
           display: "flex",
-          flexWrap: "wrap",
-          marginTop: 44,
-          fontFamily: "Inter",
-          fontWeight: 700,
-          fontSize: 62,
-          lineHeight: 1.1,
-          color: "#FFFFFF",
-          letterSpacing: -1.5,
+          flexDirection: "column",
+          justifyContent: "center",
+          backgroundColor: "#07070A",
+          padding: 84,
+          position: "relative",
         }}
       >
-        <span>The social network for&nbsp;</span>
-        <span style={{ color: "#EB008B" }}>independent music</span>
-      </div>
+        <img
+          src={starry}
+          alt=""
+          width={size.width}
+          height={size.height}
+          style={{ position: "absolute", top: 0, left: 0, opacity: 0.55 }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: size.width,
+            height: size.height,
+            background:
+              "radial-gradient(750px 520px at 78% 30%, rgba(235,0,139,0.34), rgba(7,7,10,0) 70%)",
+          }}
+        />
 
-      <div
-        style={{
-          marginTop: 26,
-          fontFamily: "Inter",
-          fontWeight: 400,
-          fontSize: 28,
-          color: "#B8B8C7",
-          letterSpacing: 0.5,
-        }}
-      >
-        Artists · Labels · Venues · Record stores · Fans
-      </div>
-    </div>,
-    {
-      ...size,
-      fonts: [
-        { name: "Inter", data: regular, weight: 400, style: "normal" },
-        { name: "Inter", data: bold, weight: 700, style: "normal" },
-      ],
-    }
+        <img src={wordmark} alt="" width={372} height={241} />
+
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            marginTop: 44,
+            fontFamily: "Inter",
+            fontWeight: 700,
+            fontSize: 62,
+            lineHeight: 1.1,
+            color: "#FFFFFF",
+            letterSpacing: -1.5,
+          }}
+        >
+          <span>The social network for&nbsp;</span>
+          <span style={{ color: "#EB008B" }}>independent music</span>
+        </div>
+
+        <div
+          style={{
+            marginTop: 26,
+            fontFamily: "Inter",
+            fontWeight: 400,
+            fontSize: 28,
+            color: "#B8B8C7",
+            letterSpacing: 0.5,
+          }}
+        >
+          Artists · Labels · Venues · Record stores · Fans
+        </div>
+      </div>,
+      {
+        ...size,
+        fonts: [
+          { name: "Inter", data: regular, weight: 400, style: "normal" },
+          { name: "Inter", data: bold, weight: 700, style: "normal" },
+        ],
+      }
+    ),
+    // Static art, nothing to invalidate. A year.
+    31536000
   );
 }

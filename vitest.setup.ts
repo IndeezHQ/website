@@ -12,21 +12,11 @@ afterEach(() => {
  * `matchMedia` for the reduced-motion checks and `IntersectionObserver` for
  * lazy video playback. Without them the components throw on mount rather than
  * failing on the thing under test.
+ *
+ * Skipped entirely in the node environment: the link preview image tests run
+ * there, because Satori needs a real Node runtime, and there is no `window`
+ * to define these on.
  */
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: vi.fn().mockImplementation((query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
-
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root = null;
   readonly rootMargin = "";
@@ -37,4 +27,20 @@ class MockIntersectionObserver implements IntersectionObserver {
   takeRecords = vi.fn(() => []);
 }
 
-vi.stubGlobal("IntersectionObserver", MockIntersectionObserver);
+if (typeof window !== "undefined") {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+
+  vi.stubGlobal("IntersectionObserver", MockIntersectionObserver);
+}

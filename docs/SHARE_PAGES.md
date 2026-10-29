@@ -158,6 +158,14 @@ signed URL directly would produce previews that work today and 404 next week.
 Instead `opengraph-image.tsx` fetches the bytes server side and inlines them,
 and the route becomes the stable URL platforms cache.
 
+**The cards are re-encoded as JPEG.** `ImageResponse` only emits PNG, and a
+PNG of album artwork at 1200x630 is 550KB to 880KB. WhatsApp will not
+download a preview image much over 300KB: it reads the tags, decides the
+image is too big, and shows a bare title. That shipped, and it was hard to
+spot because every tag read perfectly and the image route returned 200. The
+cards are rendered as before and re-encoded through sharp on the way out,
+which lands them around 65KB. `tests/integrity/og-images` asserts the budget.
+
 **It uses Next's `opengraph-image` convention, not `/og/song/<id>.jpg`.** Same
 outcome, and the framework wires the meta tags and the cache key itself.
 

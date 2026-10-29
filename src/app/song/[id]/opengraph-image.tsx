@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { ImageResponse } from "next/og";
 
+import { asJpeg, OG_CONTENT_TYPE } from "@/lib/og";
 import { site } from "@/lib/site";
 import { getSongCard } from "@/lib/song";
 
@@ -21,7 +22,7 @@ import { getSongCard } from "@/lib/song";
 
 export const alt = "A song on Indeez";
 export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const contentType = OG_CONTENT_TYPE;
 
 /** Platforms cache hard regardless; a day keeps a replaced cover honest. */
 export const revalidate = 86400;
@@ -105,133 +106,139 @@ export default async function Image({
 
   // Unavailable or unreadable: still a branded card, never a broken one.
   if (!song) {
-    return new ImageResponse(
+    return asJpeg(
+      new ImageResponse(
+        <div
+          style={{
+            width: size.width,
+            height: size.height,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#07070A",
+            position: "relative",
+          }}
+        >
+          {backdrop}
+          <img src={wordmark} alt="" width={340} height={220} />
+          <div
+            style={{
+              marginTop: 32,
+              fontFamily: "Inter",
+              fontWeight: 400,
+              fontSize: 30,
+              color: "#B8B8C7",
+            }}
+          >
+            {site.tagline}
+          </div>
+        </div>,
+        { ...size, fonts }
+      ),
+      revalidate
+    );
+  }
+
+  return asJpeg(
+    new ImageResponse(
       <div
         style={{
           width: size.width,
           height: size.height,
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
           backgroundColor: "#07070A",
+          padding: 70,
           position: "relative",
         }}
       >
         {backdrop}
-        <img src={wordmark} alt="" width={340} height={220} />
-        <div
-          style={{
-            marginTop: 32,
-            fontFamily: "Inter",
-            fontWeight: 400,
-            fontSize: 30,
-            color: "#B8B8C7",
-          }}
-        >
-          {site.tagline}
-        </div>
-      </div>,
-      { ...size, fonts }
-    );
-  }
 
-  return new ImageResponse(
-    <div
-      style={{
-        width: size.width,
-        height: size.height,
-        display: "flex",
-        alignItems: "center",
-        backgroundColor: "#07070A",
-        padding: 70,
-        position: "relative",
-      }}
-    >
-      {backdrop}
-
-      {artwork ? (
-        <img
-          src={artwork}
-          alt=""
-          width={490}
-          height={490}
-          style={{ borderRadius: 18, objectFit: "cover" }}
-        />
-      ) : (
-        <div
-          style={{
-            width: 490,
-            height: 490,
-            borderRadius: 18,
-            backgroundColor: "#1A1A24",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "Inter",
-            fontSize: 26,
-            color: "#7B7B8F",
-          }}
-        >
-          No artwork
-        </div>
-      )}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          marginLeft: 56,
-          width: 524,
-        }}
-      >
-        <img src={wordmark} alt="" width={150} height={97} />
-
-        <div
-          style={{
-            marginTop: 30,
-            fontFamily: "Inter",
-            fontWeight: 700,
-            fontSize: 58,
-            lineHeight: 1.08,
-            letterSpacing: -1.5,
-            color: "#FFFFFF",
-            // Satori has no ellipsis, so a very long title is clamped by
-            // height instead. Three lines then stops.
-            maxHeight: 190,
-            overflow: "hidden",
-          }}
-        >
-          {song.title}
-        </div>
-
-        <div
-          style={{
-            marginTop: 18,
-            fontFamily: "Inter",
-            fontWeight: 400,
-            fontSize: 34,
-            color: "#EB008B",
-          }}
-        >
-          {song.artistName}
-        </div>
-
-        {song.label && (
+        {artwork ? (
+          <img
+            src={artwork}
+            alt=""
+            width={490}
+            height={490}
+            style={{ borderRadius: 18, objectFit: "cover" }}
+          />
+        ) : (
           <div
             style={{
-              marginTop: 10,
+              width: 490,
+              height: 490,
+              borderRadius: 18,
+              backgroundColor: "#1A1A24",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               fontFamily: "Inter",
-              fontWeight: 400,
-              fontSize: 24,
+              fontSize: 26,
               color: "#7B7B8F",
             }}
           >
-            {song.label}
+            No artwork
           </div>
         )}
-      </div>
-    </div>,
-    { ...size, fonts }
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: 56,
+            width: 524,
+          }}
+        >
+          <img src={wordmark} alt="" width={150} height={97} />
+
+          <div
+            style={{
+              marginTop: 30,
+              fontFamily: "Inter",
+              fontWeight: 700,
+              fontSize: 58,
+              lineHeight: 1.08,
+              letterSpacing: -1.5,
+              color: "#FFFFFF",
+              // Satori has no ellipsis, so a very long title is clamped by
+              // height instead. Three lines then stops.
+              maxHeight: 190,
+              overflow: "hidden",
+            }}
+          >
+            {song.title}
+          </div>
+
+          <div
+            style={{
+              marginTop: 18,
+              fontFamily: "Inter",
+              fontWeight: 400,
+              fontSize: 34,
+              color: "#EB008B",
+            }}
+          >
+            {song.artistName}
+          </div>
+
+          {song.label && (
+            <div
+              style={{
+                marginTop: 10,
+                fontFamily: "Inter",
+                fontWeight: 400,
+                fontSize: 24,
+                color: "#7B7B8F",
+              }}
+            >
+              {song.label}
+            </div>
+          )}
+        </div>
+      </div>,
+      { ...size, fonts }
+    ),
+    revalidate
   );
 }
