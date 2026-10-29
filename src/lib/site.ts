@@ -35,6 +35,41 @@ export const stores = {
 
 export const appStoreLinksLive = Boolean(stores.ios || stores.android);
 
+/**
+ * Universal Links (iOS) and App Links (Android), which are what make
+ * indeez.world/song/<id> open the app rather than the browser.
+ *
+ * The bundle id and package name are the app's and are already settled. The
+ * two secrets are not ours to invent:
+ *
+ *   appleTeamId   from the Apple Developer account
+ *   androidSha256 from the Play Console app signing page
+ *
+ * Until both are filled in, the two .well-known files 404 rather than serving
+ * a malformed association. A wrong file is worse than a missing one: Apple
+ * and Google cache these aggressively, and a bad fingerprint can take days to
+ * clear once they have fetched it.
+ */
+export const appLinks = {
+  iosBundleId: "com.indeez.app",
+  androidPackage: "com.indeez.app",
+  appleTeamId: "",
+  androidSha256: "",
+  /** Paths the app claims. Keep in step with the routes that exist. */
+  paths: ["/song/*", "/artist/*", "/playlist/*"],
+} as const;
+
+/**
+ * The app's custom URL scheme. Used by the "Open in Indeez" button, which has
+ * to work today, before Universal Links are verified. Once they are, a share
+ * link opens the app directly and this button only matters to someone who
+ * reached the page in a browser.
+ */
+export const appScheme = "mobileapp";
+
+export const iosAppLinksReady = Boolean(appLinks.appleTeamId);
+export const androidAppLinksReady = Boolean(appLinks.androidSha256);
+
 export const marketingNav = [
   { href: "/#what", label: "What it is" },
   { href: "/#look", label: "See it" },

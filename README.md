@@ -93,6 +93,8 @@ tests/
 src/
 ├── app/
 │   ├── (marketing)/       # landing, about, legal documents, sign in, sign up
+│   ├── song/[id]/         # shared song links: page + per song preview image
+│   ├── .well-known/       # iOS and Android app link association files
 │   ├── opengraph-image.tsx # the link preview card, generated at build time
 │   ├── robots.ts          # crawl rules
 │   ├── sitemap.ts         # derived from the route list, with a test
@@ -262,6 +264,7 @@ pull request and every push to `main`.
 - [`AGENTS.md`](AGENTS.md) — branching, the quality gate, and the house rules for copy
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phasing to full app parity
 - [`docs/BRAND_ASSETS.md`](docs/BRAND_ASSETS.md) — logo, videos, textures and how they are produced
+- [`docs/SONG_SHARING.md`](docs/SONG_SHARING.md) — shared song links, the `song-card` contract, and what is still outstanding
 - [`../backend/README.md`](../backend/README.md) — schema, RLS, RPCs
 - [`../backend/FRONTEND_HANDOFF.md`](../backend/FRONTEND_HANDOFF.md) — auth integration guide
 - [`../mobile-app/docs/BACKEND_IDENTITY_MODEL.md`](../mobile-app/docs/BACKEND_IDENTITY_MODEL.md) — the profiles/Pages identity model
