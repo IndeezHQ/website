@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { StoreBadges } from "./store-badges";
-import { stores } from "@/lib/site";
+import { appStoreLinksLive, stores } from "@/lib/site";
 
 describe("StoreBadges", () => {
   it("shows both stores", () => {
@@ -21,8 +21,10 @@ describe("StoreBadges", () => {
     ] as const) {
       const badge = screen.getByText(name).closest("a, button");
 
-      if (href) {
-        // Fill a URL into lib/site.ts and the same badge becomes a real link.
+      // The URLs are filled in well before the listings go public, so it is
+      // the flag that decides, not whether a URL is present.
+      if (appStoreLinksLive && href) {
+        // Flip appStoreLinksLive and the same badge becomes a real link.
         expect(badge?.tagName).toBe("A");
         expect(badge).toHaveAttribute("href", href);
         continue;

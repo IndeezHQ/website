@@ -22,41 +22,63 @@ export const site = {
 } as const;
 
 /**
- * App store links. The mobile app's first submission was still in flight when
- * this site was built, so these are intentionally empty — `appStoreLinksLive`
- * is false while they are, and the download CTAs render as "coming soon"
- * rather than as buttons that go nowhere. Fill both in and the UI switches
- * over on its own.
+ * App store links. Both point at the real listings, which exist but are not
+ * public yet: right now they return 404 to anyone who is not on the review
+ * or test track.
+ *
+ * `appStoreLinksLive` is therefore a separate switch rather than something
+ * derived from the URLs. The addresses are recorded here so nothing has to
+ * be looked up on launch day, and until that flag is flipped the download
+ * buttons say "coming soon" instead of sending people to an Apple 404.
+ *
+ * **On launch day: set `appStoreLinksLive` to true.** That is the whole
+ * change. Both buttons become links across the site at once.
  */
 export const stores = {
-  ios: "",
-  android: "",
+  ios: "https://apps.apple.com/app/id6802010123",
+  android: "https://play.google.com/store/apps/details?id=com.indeez.app",
 } as const;
 
-export const appStoreLinksLive = Boolean(stores.ios || stores.android);
+export const appStoreLinksLive = false;
 
 /**
  * Universal Links (iOS) and App Links (Android), which are what make
  * indeez.world/song/<id> open the app rather than the browser.
  *
- * The bundle id and package name are the app's and are already settled. The
- * two secrets are not ours to invent:
+ * Each side is served only once its own credential is present, so Apple's
+ * file is live and Android's is not. That split is deliberate: a wrong file
+ * is worse than a missing one, because both platforms cache what they fetch
+ * and a bad fingerprint can keep the app from claiming its own links for
+ * days after it is corrected.
  *
- *   appleTeamId   from the Apple Developer account
- *   androidSha256 from the Play Console app signing page
- *
- * Until both are filled in, the two .well-known files 404 rather than serving
- * a malformed association. A wrong file is worse than a missing one: Apple
- * and Google cache these aggressively, and a bad fingerprint can take days to
- * clear once they have fetched it.
+ *   appleTeamId   Apple Developer account, Indeez International Inc.
+ *   androidSha256 Play Console, Test and release, Setup, App integrity,
+ *                 App signing, "App signing key certificate". The **app
+ *                 signing** fingerprint, not the upload key: they are
+ *                 different certificates and the upload key will verify
+ *                 against nothing.
  */
 export const appLinks = {
   iosBundleId: "com.indeez.app",
   androidPackage: "com.indeez.app",
-  appleTeamId: "",
+  appleTeamId: "4TB32Q75B9",
   androidSha256: "",
-  /** Paths the app claims. Keep in step with the routes that exist. */
-  paths: ["/song/*", "/artist/*", "/playlist/*"],
+  /**
+   * What the app claims, in Apple's `components` form rather than the older
+   * `paths`. `/join` and `/join*` are both listed because an invite arrives
+   * as `/join?token=...`, and the two forms differ in how they treat what
+   * follows the path.
+   *
+   * `/artist/*` is deliberately absent: the app declares it, but this site
+   * has no artist page yet, so claiming it would send anyone without the app
+   * to a 404. Add it here when the page ships.
+   */
+  components: [
+    { "/": "/song/*" },
+    { "/": "/playlist/*" },
+    { "/": "/join" },
+    { "/": "/join*" },
+  ],
 } as const;
 
 /**

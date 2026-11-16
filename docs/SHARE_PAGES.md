@@ -44,17 +44,24 @@ is written and committed in `../backend` but not deployed:
 Until those are applied and deployed, every playlist renders the unavailable
 state, which is a safe default rather than a broken one.
 
-**2. Apple Team ID and the Android signing fingerprint. External.**
+**2. The Android signing fingerprint. External.**
 
-- Team ID: Apple Developer account, membership details.
-- SHA-256: Play Console, Setup, App signing.
+Apple's half is done: Team ID `4TB32Q75B9`, and
+`/.well-known/apple-app-site-association` is live.
 
-Drop them into `appLinks` in `src/lib/site.ts`. The two `.well-known` routes
-404 until both are present and start serving the moment they are.
+Android still needs the **app signing** SHA-256 from Play Console (Test and
+release, Setup, App integrity, App signing, "App signing key certificate").
+Not the upload key: they are different certificates, and the upload key
+verifies against nothing. Put it in `appLinks.androidSha256` in
+`src/lib/site.ts` and `/.well-known/assetlinks.json` starts serving on the
+next deploy. It 404s until then, deliberately: Google caches what it fetches,
+so a wrong fingerprint is worse than a missing file.
 
-**3. App Store and Play Store URLs.** `stores` in `src/lib/site.ts`. The page
-shows "on their way to the stores" until they are filled in, at which point
-the download buttons appear on their own.
+**3. Launch day: flip `appStoreLinksLive`.** Both store URLs are already in
+`stores` in `src/lib/site.ts`, but the listings are not public and return 404
+to anyone outside the review tracks. The flag, not the presence of a URL, is
+what turns the badges into links, so nobody has to find the URLs under time
+pressure on the day.
 
 **4. The app side.** Associated Domains on iOS, an intent filter on Android
 covering `/song`, `/playlist` and `/join`, route mapping, and switching

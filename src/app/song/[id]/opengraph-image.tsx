@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { ImageResponse } from "next/og";
 
-import { asJpeg, OG_CONTENT_TYPE } from "@/lib/og";
+import { asJpeg, OG_CACHE_SECONDS, OG_CONTENT_TYPE } from "@/lib/og";
 import { site } from "@/lib/site";
 import { getSongCard } from "@/lib/song";
 
@@ -24,8 +24,8 @@ export const alt = "A song on Indeez";
 export const size = { width: 1200, height: 630 };
 export const contentType = OG_CONTENT_TYPE;
 
-/** Platforms cache hard regardless; a day keeps a replaced cover honest. */
-export const revalidate = 86400;
+/** How long this route holds its own render. Matches what it tells caches. */
+export const revalidate = OG_CACHE_SECONDS;
 
 const asset = (...p: string[]) =>
   path.join(process.cwd(), "src", "assets", ...p);
@@ -136,7 +136,7 @@ export default async function Image({
         </div>,
         { ...size, fonts }
       ),
-      revalidate
+      OG_CACHE_SECONDS
     );
   }
 
@@ -239,6 +239,6 @@ export default async function Image({
       </div>,
       { ...size, fonts }
     ),
-    revalidate
+    OG_CACHE_SECONDS
   );
 }

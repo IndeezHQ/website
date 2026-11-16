@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  appLinks,
   audiences,
   appStoreLinksLive,
   legalNav,
@@ -17,9 +18,17 @@ describe("site configuration", () => {
   });
 
   it("keeps the store CTAs honest", () => {
-    // The download buttons render only when there is somewhere to send
-    // people. This flag is the switch, so it must track the URLs.
-    expect(appStoreLinksLive).toBe(Boolean(stores.ios || stores.android));
+    // The URLs are the real listings and are filled in ahead of launch, so
+    // they cannot be the switch: both 404 publicly until release day. The
+    // flag is the switch, and while it is off nothing may link out.
+    if (!appStoreLinksLive) {
+      expect(stores.ios).toMatch(/^https:\/\/apps\.apple\.com\//);
+      expect(stores.android).toMatch(/^https:\/\/play\.google\.com\//);
+    }
+  });
+
+  it("points the store links at the right app, whenever they go live", () => {
+    expect(stores.android).toContain(appLinks.androidPackage);
   });
 
   it("does not repeat a nav destination", () => {

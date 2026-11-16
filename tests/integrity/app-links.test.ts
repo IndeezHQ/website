@@ -14,6 +14,12 @@ import { appLinks } from "@/lib/site";
 /** Widened: appLinks is `as const`, so its empty strings are literal types. */
 type Overrides = { appleTeamId?: string; androidSha256?: string };
 
+/** The paths the app actually claims, as the components key spells them. */
+const claimed = (body: {
+  applinks: { details: { components: unknown[] }[] };
+}) =>
+  body.applinks.details[0].components.map((c) => (c as { "/": string })["/"]);
+
 async function routes(overrides: Overrides) {
   vi.resetModules();
   vi.doMock("@/lib/site", async () => {
@@ -52,9 +58,18 @@ describe("once the credentials are in place", () => {
     const body = await apple.GET().json();
 
     expect(body.applinks.details[0].appID).toBe("ABCDE12345.com.indeez.app");
-    expect(body.applinks.details[0].paths).toContain("/song/*");
     // Apple requires the key to be present even when empty.
     expect(body.applinks.apps).toEqual([]);
+  });
+
+  it("claims every shareable route, and nothing the site cannot serve", async () => {
+    const { apple } = await routes({ appleTeamId: "ABCDE12345" });
+    const paths = claimed(await apple.GET().json());
+
+    expect(paths).toEqual(["/song/*", "/playlist/*", "/join", "/join*"]);
+    // The app declares /artist/* but this site has no artist page, so
+    // claiming it would hand anyone without the app a 404.
+    expect(paths).not.toContain("/artist/*");
   });
 
   it("declares the android package and fingerprint", async () => {
@@ -71,8 +86,16 @@ describe("once the credentials are in place", () => {
 });
 
 describe("the claimed paths", () => {
-  it("covers song links, which is what the app shares", () => {
-    expect(appLinks.paths).toContain("/song/*");
+  it("covers every page a share link can point at", () => {
+    const paths = appLinks.components.map((c) => c["/"]);
+    for (const route of ["/song/*", "/playlist/*", "/join"]) {
+      expect(paths).toContain(route);
+    }
+  });
+
+  it("has the real Apple Team ID, so the association is actually served", () => {
+    // Ten characters, letters and digits. A wrong one is cached by Apple.
+    expect(appLinks.appleTeamId).toMatch(/^[A-Z0-9]{10}$/);
   });
 
   it("uses the same bundle id and package as the app", () => {

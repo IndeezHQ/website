@@ -8,6 +8,10 @@ import { appLinks, iosAppLinksReady } from "@/lib/site";
  * It 404s until the Team ID is known. Serving a placeholder would be worse:
  * Apple caches the association, and a wrong one keeps the app from claiming
  * its own links until the cache clears.
+ *
+ * `components` rather than the older `paths`. Both still work, but Apple has
+ * documented components as the form to use since iOS 13, and it is what the
+ * app side was written against.
  */
 export const dynamic = "force-static";
 
@@ -23,7 +27,7 @@ export function GET() {
         details: [
           {
             appID: `${appLinks.appleTeamId}.${appLinks.iosBundleId}`,
-            paths: appLinks.paths,
+            components: appLinks.components,
           },
         ],
       },

@@ -29,6 +29,15 @@ export const OG_CONTENT_TYPE = "image/jpeg";
  */
 const JPEG_QUALITY = 82;
 
+/**
+ * A week. These cards are fetched by scrapers that will happily refetch on
+ * every share otherwise, and each refetch is a cold render plus an artwork
+ * download. A replaced cover takes up to a week to show in a preview, which
+ * is well inside what the platforms cache anyway: most hold a card far
+ * longer than we ask them to.
+ */
+export const OG_CACHE_SECONDS = 604800;
+
 export async function asJpeg(
   image: Response,
   cacheSeconds: number

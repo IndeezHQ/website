@@ -2,14 +2,16 @@
 
 import { useState, type SVGProps } from "react";
 
-import { stores } from "@/lib/site";
+import { appStoreLinksLive, stores } from "@/lib/site";
 
 /**
  * App Store and Google Play badges.
  *
- * Both stores are still pending, so by default these are buttons rather than
- * links: pressing one says so instead of going nowhere. Fill in `stores` in
- * lib/site.ts and the same badges become real links, with no change here.
+ * Both listings exist but are not public yet, so these are buttons rather
+ * than links: pressing one says so instead of sending someone to a store
+ * 404. The switch is `appStoreLinksLive` in lib/site.ts, not the presence of
+ * a URL, because the URLs are already filled in and waiting. Flip it on
+ * launch day and the same badges become real links.
  *
  * The marks are drawn rather than fetched so they can take the page's own
  * colour on a dark background. Before launch, swap them for Apple's and
@@ -90,7 +92,7 @@ export function StoreBadges({
         className={`flex flex-wrap gap-3 ${align === "center" ? "justify-center" : ""}`}
       >
         {badges.map((badge) =>
-          badge.href ? (
+          appStoreLinksLive && badge.href ? (
             <a key={badge.key} href={badge.href} className={face}>
               <Face Mark={badge.Mark} lead={badge.lead} name={badge.name} />
             </a>
