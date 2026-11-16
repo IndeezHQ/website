@@ -44,18 +44,18 @@ is written and committed in `../backend` but not deployed:
 Until those are applied and deployed, every playlist renders the unavailable
 state, which is a safe default rather than a broken one.
 
-**2. The Android signing fingerprint. External.**
+**2. Deep linking is done.** Both association files are live:
 
-Apple's half is done: Team ID `4TB32Q75B9`, and
-`/.well-known/apple-app-site-association` is live.
+- `/.well-known/apple-app-site-association`, Team ID `4TB32Q75B9`
+- `/.well-known/assetlinks.json`, the Play **app signing** fingerprint
 
-Android still needs the **app signing** SHA-256 from Play Console (Test and
-release, Setup, App integrity, App signing, "App signing key certificate").
-Not the upload key: they are different certificates, and the upload key
-verifies against nothing. Put it in `appLinks.androidSha256` in
-`src/lib/site.ts` and `/.well-known/assetlinks.json` starts serving on the
-next deploy. It 404s until then, deliberately: Google caches what it fetches,
-so a wrong fingerprint is worse than a missing file.
+Both are generated from `appLinks` in `src/lib/site.ts` and both 404 if their
+credential is ever emptied, which is deliberate: Apple and Google cache what
+they fetch, so a wrong file costs days where a missing one costs nothing.
+
+If App Links ever need to verify on builds installed outside Play, add the
+**upload key** fingerprint as a second entry in `sha256_cert_fingerprints`.
+It is not there now because every tester installs through Play.
 
 **3. Launch day: flip `appStoreLinksLive`.** Both store URLs are already in
 `stores` in `src/lib/site.ts`, but the listings are not public and return 404

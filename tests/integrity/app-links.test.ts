@@ -98,6 +98,12 @@ describe("the claimed paths", () => {
     expect(appLinks.appleTeamId).toMatch(/^[A-Z0-9]{10}$/);
   });
 
+  it("has a well formed Android fingerprint", () => {
+    // 32 uppercase hex pairs. Google caches whatever it fetches, so a
+    // fingerprint that is subtly malformed costs days, not minutes.
+    expect(appLinks.androidSha256).toMatch(/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/);
+  });
+
   it("uses the same bundle id and package as the app", () => {
     expect(appLinks.iosBundleId).toBe("com.indeez.app");
     expect(appLinks.androidPackage).toBe("com.indeez.app");

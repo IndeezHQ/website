@@ -45,24 +45,29 @@ export const appStoreLinksLive = false;
  * Universal Links (iOS) and App Links (Android), which are what make
  * indeez.world/song/<id> open the app rather than the browser.
  *
- * Each side is served only once its own credential is present, so Apple's
- * file is live and Android's is not. That split is deliberate: a wrong file
- * is worse than a missing one, because both platforms cache what they fetch
- * and a bad fingerprint can keep the app from claiming its own links for
- * days after it is corrected.
+ * Each side is served only once its own credential is present. Both are now,
+ * so both files serve. That gate stays because a wrong file is worse than a
+ * missing one: both platforms cache what they fetch, and a bad fingerprint
+ * can keep the app from claiming its own links for days after it is fixed.
  *
  *   appleTeamId   Apple Developer account, Indeez International Inc.
- *   androidSha256 Play Console, Test and release, Setup, App integrity,
- *                 App signing, "App signing key certificate". The **app
- *                 signing** fingerprint, not the upload key: they are
- *                 different certificates and the upload key will verify
- *                 against nothing.
+ *   androidSha256 The Play **app signing** key, read from Play Console's own
+ *                 Digital Asset Links block (Test and release, Setup, App
+ *                 integrity, App signing). Not the upload key: they are
+ *                 different certificates, they look identical, and the
+ *                 upload key verifies against nothing.
+ *
+ * The upload key fingerprint could be listed alongside it, which would make
+ * App Links verify on builds installed outside Play too. It is not here
+ * because every tester installs through Play, and a fingerprint nobody needs
+ * is a fingerprint nobody checks.
  */
 export const appLinks = {
   iosBundleId: "com.indeez.app",
   androidPackage: "com.indeez.app",
   appleTeamId: "4TB32Q75B9",
-  androidSha256: "",
+  androidSha256:
+    "3E:8E:96:EC:43:C3:28:6F:E3:41:1D:7E:E8:CB:71:EA:5C:DB:05:84:95:09:F7:A8:29:88:1B:67:C6:CB:3A:EA",
   /**
    * What the app claims, in Apple's `components` form rather than the older
    * `paths`. `/join` and `/join*` are both listed because an invite arrives
