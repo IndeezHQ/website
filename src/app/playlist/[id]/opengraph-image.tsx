@@ -23,8 +23,13 @@ export const alt = "A playlist on Indeez";
 export const size = { width: 1200, height: 630 };
 export const contentType = OG_CONTENT_TYPE;
 
-/** How long this route holds its own render. Matches what it tells caches. */
-export const revalidate = OG_CACHE_SECONDS;
+/**
+ * How long this route holds its own render. A literal, not the imported
+ * constant: Next reads segment config statically at build time and fails the
+ * build outright on anything it cannot evaluate. A test asserts this stays
+ * equal to OG_CACHE_SECONDS, which is what the response header promises.
+ */
+export const revalidate = 604800;
 
 const asset = (...p: string[]) =>
   path.join(process.cwd(), "src", "assets", ...p);

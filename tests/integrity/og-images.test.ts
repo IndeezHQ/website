@@ -58,6 +58,23 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+describe("the cache window", () => {
+  it("promises callers the same window the route actually holds", async () => {
+    // `revalidate` has to be a literal: Next evaluates segment config
+    // statically and fails the build on an imported constant. So the two can
+    // drift, and a route that re-renders more often than it claims to is a
+    // cost nobody would notice.
+    const { OG_CACHE_SECONDS } = await import("@/lib/og");
+    for (const path of [
+      "@/app/song/[id]/opengraph-image",
+      "@/app/playlist/[id]/opengraph-image",
+    ]) {
+      const { revalidate } = await import(path);
+      expect(revalidate).toBe(OG_CACHE_SECONDS);
+    }
+  });
+});
+
 describe("link preview images", () => {
   it("renders the site card", async () => {
     const { default: Image } = await import("@/app/opengraph-image");
